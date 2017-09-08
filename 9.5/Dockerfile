@@ -1,5 +1,5 @@
 FROM tiredofit/alpine:3.5
-MAINTAINER Dave Conroy <dave at tiredofit dot ca>
+LABEL maintainer="Dave Conroy (dave at tiredofit dot ca)"
 
 	ENV LANG=en_US.utf8 \
 	    PG_MAJOR=9.5 \

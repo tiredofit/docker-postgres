@@ -1,8 +1,8 @@
 FROM tiredofit/alpine:3.6
 
 ENV LANG=en_US.utf8 \
-    PG_MAJOR=9 \
-    PG_VERSION=9.5.9 \
+    PG_MAJOR=10 \
+    PG_VERSION=10.0 \
     PGDATA=/var/lib/postgresql/data
 
 ### Create User Accounts

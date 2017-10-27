@@ -1,6 +1,6 @@
 ## 2.0 2017-10-27 <dave at tiredofit dot ca>
 
-* Update to Postgres 9.5.9
+* Update to Postgres 9.6.4
 
 ## 2.0 2017-08-28 <dave at tiredofit dot ca>
 

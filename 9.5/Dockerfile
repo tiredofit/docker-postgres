@@ -1,8 +1,8 @@
-FROM tiredofit/alpine:3.6
+FROM registry.selfdesign.org/docker/alpine:3.7
 
 ENV LANG=en_US.utf8 \
     PG_MAJOR=9 \
-    PG_VERSION=9.5.9 \
+    PG_VERSION=9.5.10 \
     PGDATA=/var/lib/postgresql/data
 
 ### Create User Accounts

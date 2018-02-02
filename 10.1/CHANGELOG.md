@@ -1,6 +1,7 @@
 ## 2.1 2018-01-31 <dave at tiredofit dot ca>
 
 * Update to Alpine 3.7
+* Update Postgres 9.5.10
 * Fix Zabbix Checks
 
 ## 2.0 2017-10-27 <dave at tiredofit dot ca>

@@ -1,4 +1,4 @@
-FROM registry.selfdesign.org/docker/alpine:3.7
+FROM tiredofit/alpine:3.7
 
 ENV LANG=en_US.utf8 \
     PG_MAJOR=10 \

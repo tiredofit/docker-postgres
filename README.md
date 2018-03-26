@@ -4,7 +4,6 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/tiredofit/postgres.svg)](https://hub.docker.com/r/tiredofit/postgres)
 [![Docker Stars](https://img.shields.io/docker/stars/tiredofit/postgres.svg)](https://hub.docker.com/r/tiredofit/postgres)
 [![Docker Layers](https://images.microbadger.com/badges/image/tiredofit/postgres.svg)](https://microbadger.com/images/tiredofit/postgres)
-[![Image Size](https://img.shields.io/microbadger/image-size/tiredofit/postgres.svg)](https://microbadger.com/images/tiredofit/postgres)
 
 # Introduction
 

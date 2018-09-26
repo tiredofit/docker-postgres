@@ -1,3 +1,7 @@
+## 2.1.1 2018-09-26 <dave at tiredofit dot ca>
+
+* Bump to Postgres 9.5.14
+
 ## 2.1 2018-01-31 <dave at tiredofit dot ca>
 
 * Update to Alpine 3.7

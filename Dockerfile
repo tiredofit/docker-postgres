@@ -2,7 +2,7 @@ FROM tiredofit/alpine:3.7
 
 ENV LANG=en_US.utf8 \
     PG_MAJOR=9 \
-    PG_VERSION=9.6.6 \
+    PG_VERSION=9.6.10 \
     PGDATA=/var/lib/postgresql/data
 
 ### Create User Accounts

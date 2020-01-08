@@ -1,10 +1,5 @@
  # hub.docker.com/tiredofit/postgres
 
-[![Build Status](https://img.shields.io/docker/build/tiredofit/postgres.svg)](https://hub.docker.com/r/tiredofit/postgres)
-[![Docker Pulls](https://img.shields.io/docker/pulls/tiredofit/postgres.svg)](https://hub.docker.com/r/tiredofit/postgres)
-[![Docker Stars](https://img.shields.io/docker/stars/tiredofit/postgres.svg)](https://hub.docker.com/r/tiredofit/postgres)
-[![Docker Layers](https://images.microbadger.com/badges/image/tiredofit/postgres.svg)](https://microbadger.com/images/tiredofit/postgres)
-
 # Introduction
 
 Dockerfile to build a [Postgres Server](https://postgres.org) Image.
@@ -39,19 +34,17 @@ It has the same configuration variables as the Official [Postgres Image](https:/
 
 # Installation
 
-Automated builds of the image are available on [Docker Hub](https://hub.docker.com/tiredofit/postgres) and is the recommended method of installation.
+Automated builds of the image are available on [Docker Hub](https://hub.docker.com/r/tiredofit/postgres) and is the recommended method of installation.
 
 
 ```bash
-docker pull hub.docker.com/tiredofit/postgres
+docker pull tiredofit/postgres:{tag}
 ```
 
 The following image tags are available:
 
-* `9.5:latest` - Alpine 3.5 - Postgres 9.5
-* `9.6:latest` - Alpine 3.5 - Postgres 9.6
-* `10:latest` - Alpine 3.5 - Postgres 10
-* `latest` - Alpine 9.5
+* `12` - Alpine 3.11 - Postgres 12
+* `latest` - Alpine 3.11 - Postgres 12
 
 # Quick Start
 
@@ -69,7 +62,6 @@ The following directories are used for configuration and can be mapped for persi
 | Directory | Description |
 |-----------|-------------|
 | `/var/lib/postgresql/data` | Postgres Data Directory |
-
 
 
 ### Environment Variables

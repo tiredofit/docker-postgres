@@ -1,0 +1,20 @@
+version: '3.7'
+services:
+  
+  postgres-db:
+    image: tiredofit/postgres:12
+    container_name: postgres-db  
+    volumes:
+      - ./db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=database
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - ZABBIX_HOSTNAME=postgres-db
+    networks:
+      - services
+    restart: always
+
+networks:
+  internal:
+    external: false

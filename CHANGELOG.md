@@ -1,3 +1,27 @@
+## 2.3.0 2020-06-09 <dave at tiredofit dot ca>
+
+   ### Added
+      - Update to support tiredofit/alpine 5.0.0 base image
+
+
+## 2.2.3 2020-06-05 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Move /etc/s6/services to /etc/services.d
+
+
+## 2.2.2 2020-05-20 <dave at tiredofit dot ca>
+
+   ### Added
+      - Postgres 12.3
+
+
+## 2.2.1 2020-02-15 <dave at tiredofit dot ca>
+
+   ### Added
+      - Postgres 12.2
+
+
 ## 2.2.0 2020-01-02 <dave at tiredofit dot ca>
 
    ### Added

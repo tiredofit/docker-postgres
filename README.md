@@ -1,6 +1,6 @@
  # hub.docker.com/tiredofit/postgres
 
-# Introduction
+## Introduction
 
 Dockerfile to build a [Postgres Server](https://postgres.org) Image.
 It has the same configuration variables as the Official [Postgres Image](https://github.com/docker-library/postgres)
@@ -10,11 +10,11 @@ It has the same configuration variables as the Official [Postgres Image](https:/
 
 [Changelog](CHANGELOG.md)
 
-# Authors
+## Authors
 
 - [Dave Conroy](https://github.com/tiredofit)
 
-# Table of Contents
+## Table of Contents
 
 - [Introduction](#introduction)
     - [Changelog](CHANGELOG.md)
@@ -29,10 +29,10 @@ It has the same configuration variables as the Official [Postgres Image](https:/
     - [Shell Access](#shell-access)
    - [References](#references)
 
-# Prerequisites
+## Prerequisites
 
 
-# Installation
+## Installation
 
 Automated builds of the image are available on [Docker Hub](https://hub.docker.com/r/tiredofit/postgres) and is the recommended method of installation.
 
@@ -46,14 +46,14 @@ The following image tags are available:
 * `12` - Alpine 3.11 - Postgres 12
 * `latest` - Alpine 3.11 - Postgres 12
 
-# Quick Start
+### Quick Start
 
 * The quickest way to get started is using [docker-compose](https://docs.docker.com/compose/). See the examples folder for a working [docker-compose.yml](/docker/postgres/examples/docker-compose.yml) that can be modified for development or production use.
 
 * Set various [environment variables](#environment-variables) to understand the capabilities of this image.
 * Map [persistent storage](#data-volumes) for access to configuration and data files for backup.
 
-# Configuration
+## Configuration
 
 ### Data-Volumes
 
@@ -86,8 +86,8 @@ The following ports are exposed.
 |-----------|-------------|
 | `5432` 	   	| Postgres Server | 		    |
 
-# Maintenance
-#### Shell Access
+## Maintenance
+### Shell Access
 
 For debugging and maintenance purposes you may want access the containers shell. 
 
@@ -95,7 +95,7 @@ For debugging and maintenance purposes you may want access the containers shell.
 docker exec -it (whatever your container name is e.g. postgres) bash
 ```
 
-# References
+## References
 
 * https://postgres.org
 

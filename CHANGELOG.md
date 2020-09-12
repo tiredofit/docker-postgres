@@ -1,3 +1,10 @@
+## 2.3.1 2020-09-12 <dave at tiredofit dot ca>
+
+   ### Added
+      - Alpine 3.12
+      - Postgres 12.4
+
+
 ## 2.3.0 2020-06-09 <dave at tiredofit dot ca>
 
    ### Added

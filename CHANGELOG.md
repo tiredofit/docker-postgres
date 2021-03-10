@@ -1,3 +1,9 @@
+## 2.3.3 2021-03-10 <dave at tiredofit dot ca>
+
+   ### Added
+      - Postgresql 12.6
+
+
 ## 2.3.2 2020-11-14 <dave at tiredofit dot ca>
 
    ### Added

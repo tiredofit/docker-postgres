@@ -1,8 +1,8 @@
-version: '3.7'
+version: '2.4'
 services:
   
   postgres-db:
-    image: tiredofit/postgres:12
+    image: tiredofit/postgres:13
     container_name: postgres-db  
     volumes:
       - ./db:/var/lib/postgresql/data

@@ -1,3 +1,9 @@
+## 2.4.2 2021-05-09 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Cleanup of Docker image
+
+
 ## 2.4.1 2021-03-10 <dave at tiredofit dot ca>
 
    ### Added

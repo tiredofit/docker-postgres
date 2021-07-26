@@ -139,5 +139,5 @@ fi
 liftoff
 
 
-print_info "Starting PostgreSQL ${PG_VERSION}"
+print_start "Starting PostgreSQL ${PG_VERSION}"
 exec s6-setuidgid postgres postgres;

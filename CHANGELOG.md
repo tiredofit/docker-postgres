@@ -1,3 +1,10 @@
+## 2.4.3 2021-07-26 <dave at tiredofit dot ca>
+
+   ### Added
+      - Alpine 3.14
+      - Postgresql 13.3
+
+
 ## 2.4.2 2021-05-09 <dave at tiredofit dot ca>
 
    ### Changed

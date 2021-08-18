@@ -1,3 +1,9 @@
+## 2.4.4 2021-08-18 <dave at tiredofit dot ca>
+
+   ### Added
+      - Postgres 13.4
+
+
 ## 2.4.3 2021-07-26 <dave at tiredofit dot ca>
 
    ### Added

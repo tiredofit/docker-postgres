@@ -1,3 +1,9 @@
+## 2.4.5 2021-09-17 <dave at tiredofit dot ca>
+
+   ### Added
+      - Pin Zabbix Agent Classic
+
+
 ## 2.4.4 2021-08-18 <dave at tiredofit dot ca>
 
    ### Added

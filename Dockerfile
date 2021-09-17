@@ -1,6 +1,7 @@
-FROM tiredofit/alpine:3.14
+FROM docker.io/tiredofit/alpine:3.14
 
-ENV LANG=en_US.utf8 \
+ENV ZABBIX_AGENT_TYPE=CLASSIC \
+    LANG=en_US.utf8 \
     PG_MAJOR=13 \
     PG_VERSION=13.4 \
     PGDATA=/var/lib/postgresql/data

@@ -1,9 +1,9 @@
-FROM docker.io/tiredofit/alpine:3.14
+FROM docker.io/tiredofit/alpine:3.15
 
 ENV ZABBIX_AGENT_TYPE=CLASSIC \
     LANG=en_US.utf8 \
     PG_MAJOR=14 \
-    PG_VERSION=13.0 \
+    PG_VERSION=14.1 \
     PGDATA=/var/lib/postgresql/data
 
 ### Create User Accounts

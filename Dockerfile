@@ -4,7 +4,9 @@ ENV ZABBIX_AGENT_TYPE=CLASSIC \
     LANG=en_US.utf8 \
     PG_MAJOR=14 \
     PG_VERSION=14.1 \
-    PGDATA=/var/lib/postgresql/data
+    PGDATA=/var/lib/postgresql/data \
+    IMAGE_NAME="tiredofit/postgres" \
+    IMAGE_REPO_URL="https://github.com/tiredofit/docker-postgres/"
 
 ### Create User Accounts
 RUN set -ex && \

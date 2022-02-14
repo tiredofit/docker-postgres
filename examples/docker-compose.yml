@@ -11,6 +11,8 @@ services:
       - POSTGRES_USER=user
       - POSTGRES_PASSWORD=password
       - ZABBIX_HOSTNAME=postgres-db
+      # use the classic agent else Zabbix doesn't start and the db doesn't come up.
+      - ZABBIX_AGENT_TYPE=classic
     networks:
       - services
     restart: always

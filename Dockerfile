@@ -1,9 +1,9 @@
-FROM docker.io/tiredofit/alpine:3.15
+FROM docker.io/tiredofit/alpine:3.16
 
 ENV ZABBIX_AGENT_TYPE=CLASSIC \
     LANG=en_US.utf8 \
     PG_MAJOR=13 \
-    PG_VERSION=13.6 \
+    PG_VERSION=13.7 \
     PGDATA=/var/lib/postgresql/data \
     IMAGE_NAME="tiredofit/postgres" \
     IMAGE_REPO_URL="https://github.com/tiredofit/docker-postgres/"

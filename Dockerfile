@@ -2,7 +2,7 @@ FROM tiredofit/alpine:3.16
 
 ENV LANG=en_US.utf8 \
     PG_MAJOR=12 \
-    PG_VERSION=12.11 \
+    PG_VERSION=12.12 \
     PGDATA=/var/lib/postgresql/data \
     IMAGE_NAME="tiredofit/postgres" \
     IMAGE_REPO_URL="https://github.com/tiredofit/docker-postgres/"

@@ -1,3 +1,9 @@
+## 2.5.10 2022-10-13 <dave at tiredofit dot ca>
+
+   ### Added
+      - Postgresql 15.0
+
+
 ## 2.5.9 2022-09-14 <dave at tiredofit dot ca>
 
    ### Added

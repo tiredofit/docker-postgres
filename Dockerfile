@@ -1,4 +1,4 @@
-FROM tiredofit/alpine:3.16
+FROM tiredofit/alpine:3.17
 
 ENV LANG=en_US.utf8 \
     PG_MAJOR=12 \

@@ -1,4 +1,4 @@
-FROM docker.io/tiredofit/alpine:3.16
+FROM docker.io/tiredofit/alpine:3.17
 
 ENV ZABBIX_AGENT_TYPE=CLASSIC \
     LANG=en_US.utf8 \

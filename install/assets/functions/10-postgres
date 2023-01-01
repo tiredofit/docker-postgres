@@ -1,0 +1,385 @@
+#!/command/with-contenv bash
+
+bootstrap_filesystem() {
+    if [ ! -d "${CERT_PATH}" ] ; then
+        mkdir -p "${CERT_PATH}"
+    fi
+    if [ $(stat -c %U "${CERT_PATH}") != "postgres" ] ; then silent chown -R postgres:postgres "${CERT_PATH}" ; fi
+
+    if [ ! -d "${CONFIG_PATH}" ] ; then
+        mkdir -p "${CONFIG_PATH}"
+    fi
+    if [ $(stat -c %U "${CONFIG_PATH}") != "postgres" ] ; then silent chown -R postgres:postgres "${CONFIG_PATH}" ; fi
+
+    if [ ! -d "${CONFIG_CUSTOM_PATH}" ] ; then
+        mkdir -p "${CONFIG_CUSTOM_PATH}"
+    fi
+    if [ $(stat -c %U "${CONFIG_CUSTOM_PATH}") != "postgres" ] ; then silent chown -R postgres:postgres "${CONFIG_CUSTOM_PATH}" ; fi
+
+    if [ ! -d "${DATA_PATH}" ] ; then
+        mkdir -p "${DATA_PATH}"
+    fi
+    if [ $(stat -c %U "${DATA_PATH}") != "postgres" ] ; then chown -R postgres:postgres "${DATA_PATH}" ; fi
+    if [ $(stat -c %a "${DATA_PATH}") != "700" ] ; then chmod -R 700 "${DATA_PATH}" ; fi
+
+    if [ ! -d "/var/run/postgresql" ] ; then
+        mkdir -p "/var/run/postgresql"
+    fi
+
+    if [ $(stat -c %U "/var/run/postgresql") != "postgres" ] ; then
+        chown postgres:postgres "/var/run/postgresql"
+        chmod g+s /var/run/postgresql
+    fi
+
+    if [ -n "${WAL_PATH}" ] ; then
+        if [ ! -d "${WAL_PATH}" ] ; then
+            mkdir -p "${WAL_PATH}"
+        fi
+        if [ $(stat -c %U "${WAL_PATH}") != "postgres" ] ; then chown -R postgres:postgres "${WAL_PATH}" ; fi
+        if [ $(stat -c %a "${WAL_PATH}") != "700" ] ; then chmod -R 700 "${WAL_PATH}" ; fi
+    fi
+
+    case "${LOG_TYPE,,}" in
+        file | both)
+            if [ ! -d "${LOG_PATH}" ] ; then
+                mkdir -p "${LOG_PATH}"
+            fi
+            if [ $(stat -c %U "${LOG_PATH}") != "postgres" ] ; then chown postgres:postgres "${LOG_PATH}" ; fi
+        ;;
+    esac
+}
+
+control_server() {
+    case "${1}" in
+        start )
+            sanity_var "SUPERUSER_PASS" "Superuser Password"
+            export PGUSER=$SUPERUSER_USER
+            export PGPASSWORD=${SUPERUSER_PASS}
+            TZ=${TIMEZONE} silent s6-setuidgid postgres pg_ctl \
+                                                                -D "${DATA_PATH}" \
+                                                                -o "-c config_file=${CONFIG_PATH}/${CONFIG_FILE}" \
+                                                                -o "-c listen_addresses='localhost'" \
+                                                                -w start
+
+            wait_for_port 127.0.0.1 ${LISTEN_PORT}
+
+        ;;
+        stop )
+            TZ=${TIMEZONE} silent s6-setuidgid postgres pg_ctl \
+                                                                -D "${DATA_PATH}" \
+                                                                -o "-c config_file=${CONFIG_PATH}/${CONFIG_FILE}" \
+                                                                -o "-c listen_addresses='localhost'" \
+                                                                -m fast \
+                                                                -w stop
+        ;;
+    esac
+}
+
+configure_monitoring() {
+    if var_true "${CONTAINER_ENABLE_MONITORING}" && [ "${CONTAINER_MONITORING_BACKEND,,}" = "zabbix" ]; then
+        source /assets/defaults/03-monitoring
+        cat <<EOF > "${ZABBIX_CONFIG_PATH}"/"${ZABBIX_CONFIG_FILE}.d"/tiredofit_postgres.conf
+# Zabbix Postgresql Configuration - Automatically Generated
+# Find Companion Zabbix Server Templates at https://github.com/tiredofit/docker-postgres
+# Autoregister=postgres
+EOF
+
+        if ! psql -Atq -U ${SUPERUSER_USER} -d postgres -c "SELECT '@' || usename || '@' FROM pg_user" | grep -q "@${MONITOR_USER}@" ; then
+            print_notice "[configure_monitoring] Creating Monitor User: '${MONITOR_USER}'"
+            silent psql \
+                    -v \
+                    --username ${SUPERUSER_USER} --dbname postgres <<-EOSQL
+    CREATE USER ${MONITOR_USER} WITH PASSWORD '${MONITOR_PASS}' INHERIT;
+    GRANT pg_monitor TO ${MONITOR_USER};
+EOSQL
+
+        fi
+
+        if ! grep -q "${MONITOR_USER}" "${CONFIG_PATH}"/"${HBA_FILE}" ; then
+            print_notice "[configure_monitoring] Adding '${MONITOR_USER}' to '${HBA_FILE}'"
+            echo "host       all        ${MONITOR_USER}     localhost               md5" >> "${CONFIG_PATH}"/"${HBA_FILE}"
+        fi
+    else
+        print_debug "[configure_monitoring] Deleting Monitor User: '${MONITOR_USER}'"
+        if psql -Atq -U ${SUPERUSER_USER} -d postgres -c "SELECT '@' || usename || '@' FROM pg_user" | grep -q "@${MONITOR_USER}@" ; then
+            silent psql \
+                        -v \
+                        --username ${SUPERUSER_USER} --dbname postgres <<-EOSQL
+    DROP USER IF EXISTS ${MONITOR_USER};
+EOSQL
+        fi
+        sed -i "/${MONITOR_USER}/d" "${CONFIG_PATH}"/"${HBA_FILE}"
+    fi
+}
+
+configure_replication() {
+    if var_true "${ENABLE_REPLICATION}" ; then
+        case "${REPLICATION_MODE,,}" in
+            main | master | primary )
+                sanity_var "REPLICATION_PASS" "Replication Password"
+                if ! psql -Atq -U ${SUPERUSER_USER} -d postgres -c "SELECT '@' || usename || '@' FROM pg_user" | grep -q "@${REPLICATION_USER}@" ; then
+                    print_notice "[configure_monitoring] Creating Monitor User: '${MONITOR_USER}'"
+                    silent psql \
+                            -v \
+                            --username ${SUPERUSER_USER} --dbname postgres <<-EOSQL
+            CREATE USER ${REPLICATION_USER} WITH REPLICATION LOGIN ENCRYPTED PASSWORD '${REPLICATION_PASS}';
+EOSQL
+                fi
+
+                if ! grep -q "${REPLICATION_USER}" "${CONFIG_PATH}"/"${HBA_FILE}" ; then
+                    print_notice "[configure_replication] Adding '${REPLICATION_USER}/${REPLICATION_IP_ALLOW}' to '${HBA_FILE}'"
+                    echo "host replication ${REPLICATION_USER} ${REPLICATION_IP_ALLOW} md5" >> "${CONFIG_PATH}"/"${HBA_FILE}"
+                fi
+            ;;
+        esac
+    else
+        case "${REPLICATION_MODE,,}" in
+            main | master | primary )
+                print_debug "[configure_replication] Deleting Replication User: '${REPLICATION_USER}'"
+                if psql -Atq -U ${SUPERUSER_USER} -d postgres -c "SELECT '@' || usename || '@' FROM pg_user" | grep -q "@${REPLICATION_USER}@" ; then
+                    silent psql \
+                                -v \
+                                --username ${SUPERUSER_USER} --dbname postgres <<-EOSQL
+    DROP USER IF EXISTS "${REPLICATION_USER}";
+EOSQL
+                    sed -i "/host replication/d" "${CONFIG_PATH}"/"${HBA_FILE}"
+                fi
+            ;;
+        esac
+    fi
+}
+
+create_databases() {
+    if var_true "${CREATE_DB}" ; then
+        if [ -n "${DB_NAME}" ] && [ -z "${DB01_NAME}" ] ; then export DB01_NAME="${DB_NAME}" ; unset DB_NAME ; fi
+        if [ -n "${DB_USER}" ] && [ -z "${DB01_USER}" ] ; then export DB01_USER="${DB_USER}" ; unset DB_USER ; fi
+        if [ -n "${DB_PASS}" ] && [ -z "${DB01_PASS}" ] ; then export DB01_PASS="${DB_PASS}" ; unset DB_PASS ; fi
+        if [ -n "${DB_EXTENSION}" ] && [ -z "${DB01_EXTENSION}" ] ; then export DB01_EXTENSION="${DB_EXTENSION}" ; unset DB_EXTENSION ; fi
+
+        dbnum=$(printenv | sort | grep -c '^DB.*_NAME')
+        for (( i = 01; i <= dbnum; i++ )) ; do
+            i=$(printf "%02d" $i)
+            file_env "DB${i}_NAME"
+            DB_NAME=DB${i}_NAME
+            file_env "DB${i}_USER"
+            DB_USER=DB${i}_USER
+            file_env "DB${i}_PASS"
+            DB_PASS=DB${i}_PASS
+            DB_EXTENSION=DB${i}_EXTENSION
+
+            if ! psql -lqt | cut -d \| -f 1 | grep -qw "${!DB_NAME}" ; then
+                new_db=true
+                print_notice "[create_databases] Creating Database: '${!DB_NAME}'"
+                silent psql \
+                            -v \
+                            --username ${SUPERUSER_USER} --dbname postgres <<-EOSQL
+    CREATE DATABASE "${!DB_NAME}" ;
+EOSQL
+                for db_extension in $(awk -F',' '{for (i = 1 ; i <= NF ; i++) print $i}' <<< "${!DB_EXTENSION}"); do
+                    print_notice "[create_databases] Adding extension '${db_extension}' to '${!DB_NAME}'"
+                    silent psql \
+                                -v \
+                                --username ${SUPERUSER_USER} --dbname ${!DB_NAME} <<-EOSQL
+    CREATE EXTENSION IF NOT EXISTS ${db_extension};
+EOSQL
+                done
+            fi
+
+            if ! psql -Atq -U ${SUPERUSER_USER} -d postgres -c "SELECT '@' || usename || '@' FROM pg_user" | grep -q "@${!DB_USER}@" ; then
+                print_notice "[create_databases] Creating User: '${!DB_USER}'"
+                silent psql \
+                            -v \
+                            --username ${SUPERUSER_USER} --dbname postgres <<-EOSQL
+    CREATE USER ${!DB_USER} WITH ENCRYPTED PASSWORD '${!DB_PASS}';
+EOSQL
+
+                print_notice "[create_databases] Granting all privileges to '${!DB_USER}' on '${!DB_NAME}'"
+                silent psql \
+                            -v \
+                            --username ${SUPERUSER_USER} --dbname postgres <<-EOSQL
+    GRANT ALL PRIVILEGES ON DATABASE ${!DB_NAME} TO ${!DB_USER};
+EOSQL
+            fi
+
+            if var_true "${new_db}" ; then
+                silent psql \
+                            -v \
+                            --username ${SUPERUSER_USER} --dbname postgres <<-EOSQL
+    ALTER DATABASE ${!DB_NAME} OWNER TO ${!DB_USER};
+EOSQL
+            fi
+        done
+    fi
+}
+
+configure_server() {
+    if [ "${SETUP_MODE,,}" = "auto" ] ; then
+        if [ ! -f "${CONFIG_PATH}"/"${CONFIG_FILE}" ]; then
+            case "${CONFIG_MODE,,}" in
+                "default" )
+                    s6-setuidgid postgres cp /assets/postgres/postgres-default.conf "${CONFIG_PATH}"/"${CONFIG_FILE}"
+                ;;
+            esac
+        fi
+
+        if [ ! -f "${CONFIG_PATH}"/"${HBA_FILE}" ]; then
+            s6-setuidgid postgres cp /assets/postgres/pg_hba.conf "${CONFIG_PATH}"/"${HBA_FILE}"
+        fi
+
+        if [ ! -f "${CONFIG_PATH}"/"${IDENT_FILE}" ]; then
+            s6-setuidgid postgres cp /assets/postgres/pg_ident.conf "${CONFIG_PATH}"/"${IDENT_FILE}"
+        fi
+
+        print_debug "[configure_server] Log type: ${LOG_TYPE,,}"
+        case "${LOG_TYPE,,}" in
+            file )
+                logging_collector=on
+                print_debug "[configure_server] Log Format: ${LOG_TYPE,,}"
+                case "${LOG_FORMAT,,}" in
+                    csv )
+                        log_format=csvlog
+                        create_logrotate postgresql "${LOG_PATH}"/"${LOG_FILE%.*}".csv postgres postgres
+                    ;;
+                    json )
+                        log_format=jsonlog
+                        create_logrotate postgresql "${LOG_PATH}"/"${LOG_FILE%.*}".json postgres postgres
+                    ;;
+                    normal | default | stderr | * )
+                        log_format=stderr
+                        create_logrotate postgresql "${LOG_PATH}"/"${LOG_FILE}" postgres postgres
+                    ;;
+                esac
+            ;;
+            console | *)
+                log_format=stderr
+                logging_collector=off
+            ;;
+        esac
+
+        s6-setuidgid postgres sed -i \
+                                    -e "s|data_directory = '.*'|data_directory = '${DATA_PATH}'|g" \
+                                    -e "s|include_dir = '.*'|include_dir = '${CONFIG_CUSTOM_PATH}'|g" \
+                                    -e "s|hba_file = '.*'|hba_file = '${CONFIG_PATH}/${HBA_FILE}'|g" \
+                                    -e "s|ident_file = '.*'|ident_file = '${CONFIG_PATH}/${IDENT_FILE}'|g" \
+                                    -e "s|listen_addresses = '.*'|listen_addresses = '${LISTEN_IP}'|g" \
+                                    -e "s|port = '.*'|port = '${LISTEN_PORT}'|g" \
+                                    -e "s|max_connections = .*|max_connections = ${MAX_CONNECTIONS}|g" \
+                                    -e "s|log_destination = '.*'|log_destination = '${log_format}'|g" \
+                                    -e "s|logging_collector = .*|logging_collector = ${logging_collector}|g" \
+                                    -e "s|log_directory = '.*'|log_directory = '${LOG_PATH}'|g" \
+                                    -e "s|log_filename = '.*'|log_filename = '${LOG_FILE}'|g" \
+                                    -e "s|log_min_messages = .*|log_min_messages = ${LOG_LEVEL,,}|g" \
+                                    -e "s|log_min_error_statement = .*|log_min_error_statement = ${LOG_LEVEL_ERROR_STATEMENT,,}|g" \
+                                    -e "s|timezone = '.*'|timezone = '${TIMEZONE}'|g" \
+                                    "${CONFIG_PATH}"/"${CONFIG_FILE}"
+
+        if var_true "${ENABLE_REPLICATION}" && ! [[ "${REPLICATION_MODE,,}" =~ ^(main|master|primary)$ ]] ; then
+            cat <<EOREPLICATIONHOTSTANDBY | silent sudo -u postgres tee "${CONFIG_CUSTOM_PATH}"/replication-hot_standby.conf
+checkpoint_segments = 8
+hot_standby =on
+max_wal_senders = 16
+wal_keep_segments = 32
+wal_level = 'hot_standby'
+EOREPLICATIONHOTSTANDBY
+
+            case "${REPLICATION_MODE,,}" in
+                secondary | slave )
+                    sanity_var "REPLICATION_HOST" "hostname of replication host"
+                    sanity_var "REPLICATION_PORT" "listening port of replication host"
+                    sanity_var "REPLICATION_USER" "replication user on replication host"
+                    sanity_var "REPLICATION_PASS" "replication password for user on replication host"
+                    cat <<EOREPLICATIONRECOVERY | silent sudo -u postgres tee "${CONFIG_CUSTOM_PATH}"/replication-recovery.conf
+standby_mode = 'on'
+primary_conninfo = 'host=${REPLICATION_HOST} port=${REPLICATION_PORT} user=${REPLICATION_USER} password=${REPLICATION_PASS} sslmode=${REPLICATION_SSLMODE}'
+EOREPLICATIONRECOVERY
+                ;;
+            esac
+        else
+            silent rm -rf "${CONFIG_CUSTOM_PATH}"/replication*.conf
+        fi
+    fi
+}
+
+initialize_cluster() {
+    replicate_initial() {
+        export PGPASSWORD=${REPLICATION_PASS}
+        until pg_isready --host="${REPLICATION_HOST}" --port="${REPLICATION_PORT}" --username="${REPLICAION_USER}" -q ; do
+            sleep 5
+            (( counter+=5 ))
+            print_warn "Replication Host '${REPLICATION_HOST}' is not accessible, retrying.. ($counter seconds so far)"
+        done
+        silent pg_basebackup \
+                        -D ${DATA_PATH} \
+                        -h ${REPLICATION_HOST} \
+                        -p ${REPLICATION_PORT} \
+                        -U ${REPLICATION_USER} \
+                        -X $1 \
+                        -w
+    }
+
+    if [ ! -s "${DATA_PATH}"/PG_VERSION ] ; then
+        if [ "$(dirname ${CONFIG_CUSTOM_PATH})/" = "${DATA_PATH}" ] ; then
+            mv "${CONFIG_CUSTOM_PATH}" /tmp/
+        fi
+        if dir_notempty "${DATA_PATH}" ; then
+            print_error "DATA_PATH '${DATA_PATH}' needs to be empty - Exiting."
+            exit 1
+        fi
+        if var_true "${ENABLE_REPLICATION}" && ! [[ "${REPLICATION_MODE,,}" =~ ^(main|master|primary)$ ]] ; then
+            sanity_var "REPLICATION_HOST" "hostname of replication host"
+            sanity_var "REPLICATION_PORT" "listening port of replication host"
+            sanity_var "REPLICATION_USER" "replication user on replication host"
+            sanity_var "REPLICATION_PASS" "replication password for user on replication host"
+            print_notice "[initialize_cluster] First time installation deletcted"
+            print_notice "[initialize_cluster] Replication Mode enabled: '${REPLICATION_MODE,,}'"
+            case "${REPLICATION_MODE,,}" in
+                secondary | slave )
+                    print_notice "[initialize_cluster] Replicating initial data from '${REPLICATION_HOST}'"
+                    replicate_initial stream
+                ;;
+                snapshot )
+                    print_notice "[initialize_cluster] Generating snapshot data from '${REPLICATION_HOST}'"
+                    replicate_initial fetch
+                ;;
+            esac
+        else
+            print_notice "[initialize_cluster] First time installation detected - Initializing PostgreSQL Databases"
+            initdb_args="\
+                            --encoding=${INITDB_ENCODING} \
+                            --icu=locale=${INITDB_LOCALE} \
+                            --locale-provider=icu \
+                            --lc-collate=${INITDB_LC_COLLATE} \
+                            --lc-ctype=${INITDB_LC_CTYPE} \
+                            --no-instructions \
+                            --wal-segsize=${WAL_SEGMENT_SIZE_MB} \
+                            ${INITDB_ARGS} \
+                        "
+
+            if [ -n "${WAL_PATH}" ] ; then
+                initdb_args="${initdb_args} --waldir ${WAL_PATH}"
+            fi
+
+            if var_true "${ENABLE_DATA_CHECKSUMS}" ; then
+                initdb_args="${initdb_args} --data-checksums"
+            fi
+            echo "${SUPERUSER_PASS}" >> /tmp/.pgpassword
+
+            TZ="${TIMEZONE}" silent s6-setuidgid postgres initdb \
+                                    --username=${SUPERUSER_USER} \
+                                    --pwfile=/tmp/.pgpassword \
+                                    ${initdb_args} ${DATA_PATH}
+            rm -rf "${DATA_PATH}"/*.conf \
+                    /tmp/.pgpassword
+        fi
+        if [ "$(dirname ${CONFIG_CUSTOM_PATH})/" = "${DATA_PATH}" ] ; then
+            mv /tmp/$(basename "${CONFIG_CUSTOM_PATH}") "${DATA_PATH}"/
+        fi
+    else
+        print_debug "[initialize_cluster] Skipping - Already initialized"
+        if [ "${POSTGRES_VERSION:0:2}" != $(cat "${DATA_PATH}"/PG_VERSION) ] ; then
+            print_error "Detected Major version error. Schema is built for '$(cat "{DATA_PATH}"/PG_VERSION)' and this image is using '${PG_VERSION:0:2}'"
+            print_error "Upgrade database or perform a restore from a backup"
+            exit 1
+        fi
+    fi
+}

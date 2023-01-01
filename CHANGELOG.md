@@ -1,3 +1,23 @@
+## 3.0.0 2022-12-31 <dave at tiredofit dot ca>
+
+This image rewrite contains many breaking changes, yet tries to keep compatibility with older installations specifically with paths. It would be recommended to take a backup of your existing database and restore to a fresh installation to take advantage of the new features.
+
+   ### Added
+      - Rewrote entire image
+      - Independent Superuser User and Password for controlling all aspects of server
+      - Multiple Database and User support
+      - Extensions Support per database
+      - Replication Support (Main, Secondary (Read Only), Snapshot)
+      - Customizable paths for logs, config, data, seperate path for transaction logs
+      - Log formatting, Log type options
+      - Customizable Locales
+      - Monitoring Support using Zabbix 2 Agent
+      - Customizable Listening Ports
+
+   ### Reverted
+      - Deprecation of POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB environment variables. See README for information
+
+
 ## 2.5.12 2022-11-23 <dave at tiredofit dot ca>
 
    ### Added

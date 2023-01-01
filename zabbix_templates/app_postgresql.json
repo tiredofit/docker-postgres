@@ -1,0 +1,3125 @@
+{
+    "zabbix_export": {
+        "version": "6.2",
+        "date": "2022-12-31T01:27:50Z",
+        "template_groups": [
+            {
+                "uuid": "c118c4c050a14f74b0465eed7e55eae7",
+                "name": "DB/SQL"
+            },
+            {
+                "uuid": "748ad4d098d447d492bb935c907f652f",
+                "name": "Templates/Databases"
+            }
+        ],
+        "templates": [
+            {
+                "uuid": "d0ef7d659a8f4beaaabfc4b6134e737a",
+                "template": "PostgreSQL",
+                "name": "PostgreSQL",
+                "description": "Get Postgresql metrics using Zabbix agent 2 running on Linux.\n\nThis template is meant to be used with https://github.com/tiredofit/docker-postgres",
+                "groups": [
+                    {
+                        "name": "DB/SQL"
+                    },
+                    {
+                        "name": "Templates/Databases"
+                    }
+                ],
+                "items": [
+                    {
+                        "uuid": "04b1c83463f247b0a42f17c5d0a9ce14",
+                        "name": "Archive: Count of archive files",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.archive.count_archived_files",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Collect all metrics from pg_stat_activity\nhttps://www.postgresql.org/docs/current/monitoring-stats.html#PG-STAT-ARCHIVER-VIEW",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.archived_count"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.archive[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "729208d50ef64e50b0bb342899e211c2",
+                        "name": "Archive: Count of files in archive_status need to archive",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.archive.count_files_to_archive",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.count_files"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.archive[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "b60523c62afc4813aeb64cf9598fb7bd",
+                        "name": "Archive: Count of attempts to archive files",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.archive.failed_trying_to_archive",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Collect all metrics from pg_stat_activity\nhttps://www.postgresql.org/docs/current/monitoring-stats.html#PG-STAT-ARCHIVER-VIEW",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.failed_count"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.archive[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "285f434f79864d24a4e66d5a49c539e9",
+                        "name": "Archive: Count of files need to archive",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.archive.size_files_to_archive",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Size of files to archive",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.size_files"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.archive[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "e9f4284fd3a1459e9c519dbdd8ee3425",
+                        "name": "PostgreSQL: Get archive",
+                        "key": "pgsql.archive[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "0",
+                        "trends": "0",
+                        "value_type": "TEXT",
+                        "description": "Collect archive status metrics",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Zabbix raw items"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "d9169b4b31554063b9d01d0d27b4beee",
+                        "name": "Autovacuum: Count of autovacuum workers",
+                        "key": "pgsql.autovacuum.count[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of autovacuum workers.",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "c49f777ae0db48879bc946989bfc36f6",
+                        "name": "Bgwriter: Buffers allocated",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.bgwriter.buffers_alloc.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of buffers allocated",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.buffers_alloc"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.bgwriter[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "1624e89567824e0493492a3dcc979788",
+                        "name": "Bgwriter: Buffers written directly by a backend",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.bgwriter.buffers_backend.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of buffers written directly by a backend",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.buffers_backend"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.bgwriter[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "6e5990d8a0854efd83b3e6a57aa2c2f9",
+                        "name": "Bgwriter: Times a backend execute its own fsync",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.bgwriter.buffers_backend_fsync.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of times a backend had to execute its own fsync call (normally the background writer handles those even when the backend does its own write)",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.buffers_backend_fsync"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.bgwriter[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "3bf0496d313f4dfea67c95010be54372",
+                        "name": "Checkpoint: Buffers checkpoints written",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.bgwriter.buffers_checkpoint.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of buffers written during checkpoints",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.buffers_checkpoint"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.bgwriter[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "65f4aeedbc7d40ed9a14e0dbd8024c4b",
+                        "name": "Checkpoint: Buffers background written",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.bgwriter.buffers_clean.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of buffers written by the background writer",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.buffers_clean"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.bgwriter[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "23fcb5ee8c19436b827001114961eb16",
+                        "name": "Checkpoint: Requested",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.bgwriter.checkpoints_req.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of requested checkpoints that have been performed",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.checkpoints_req"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.bgwriter[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "9c578a8e072940728cc00d94f52cec8d",
+                        "name": "Checkpoint: By timeout",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.bgwriter.checkpoints_timed.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of scheduled checkpoints that have been performed",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.checkpoints_timed"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.bgwriter[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "b94507037a584b9391f610e59dd34e6c",
+                        "name": "Checkpoint: Checkpoint sync time",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.bgwriter.checkpoint_sync_time.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "s",
+                        "description": "Total amount of time that has been spent in the portion of checkpoint processing where files are synchronized to disk",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.checkpoint_sync_time"
+                                ]
+                            },
+                            {
+                                "type": "MULTIPLIER",
+                                "parameters": [
+                                    "0.001"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.bgwriter[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "26839587c46043caa2991e973962b954",
+                        "name": "Checkpoint: Checkpoint write time",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.bgwriter.checkpoint_write_time.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "s",
+                        "description": "Total amount of time that has been spent in the portion of checkpoint processing where files are written to disk, in milliseconds",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.checkpoint_write_time"
+                                ]
+                            },
+                            {
+                                "type": "MULTIPLIER",
+                                "parameters": [
+                                    "0.001"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.bgwriter[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "b83939ecfb094a7e9eb42cd9a7e2695c",
+                        "name": "Bgwriter: Number of bgwriter stopped",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.bgwriter.maxwritten_clean.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of times the background writer stopped a cleaning scan because it had written too many buffers",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.maxwritten_clean"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.bgwriter[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "6020e17c25104cbfba182e9cddfe6336",
+                        "name": "PostgreSQL: Get bgwriter",
+                        "key": "pgsql.bgwriter[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "0",
+                        "trends": "0",
+                        "value_type": "TEXT",
+                        "description": "https://www.postgresql.org/docs/12/monitoring-stats.html#PG-STAT-BGWRITER-VIEW",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Zabbix raw items"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "b98d2328694f44598f2177b3f93d4b90",
+                        "name": "PostgreSQL: Cache hit",
+                        "key": "pgsql.cache.hit[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "%",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "2ea55460f0d34063ae4ab65b74ec852c",
+                        "name": "Connections sum: Active",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.connections.active",
+                        "delay": "0",
+                        "history": "7d",
+                        "description": "Total number of connections executing a query",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.active"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.connections[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "69f14028e98b48d489fbd7345c2213dd",
+                        "name": "Connections sum: Disabled",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.connections.disabled",
+                        "delay": "0",
+                        "history": "7d",
+                        "description": "Total number of disabled connections",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.disabled"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.connections[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "62a2401041724b4888bf058035dc6a0c",
+                        "name": "Connections sum: Fastpath function call",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.connections.fastpath_function_call",
+                        "delay": "0",
+                        "history": "7d",
+                        "description": "Total number of connections executing a fast-path function",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.idle_in_transaction"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.connections[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "fc3b357cc8a24c4aad60784d1bfb7e18",
+                        "name": "Connections sum: Idle",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.connections.idle",
+                        "delay": "0",
+                        "history": "7d",
+                        "description": "Total number of connections waiting for a new client command",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.idle"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.connections[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "b900a8123dfa48e0ac8fd4b92ae8678d",
+                        "name": "Connections sum: Idle in transaction",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.connections.idle_in_transaction",
+                        "delay": "0",
+                        "history": "7d",
+                        "description": "Total number of connections in a transaction state, but not executing a query",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.idle_in_transaction"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.connections[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "99b0a3e14af44924b0319a0a9f6c16c7",
+                        "name": "Connections sum: Idle in transaction (aborted)",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.connections.idle_in_transaction_aborted",
+                        "delay": "0",
+                        "history": "7d",
+                        "description": "Total number of connections in a transaction state, but not executing a query and one of the statements in the transaction caused an error.",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.idle_in_transaction_aborted"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.connections[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "194c41f88e9e44879a70033913dd41d3",
+                        "name": "Connections sum: Prepared",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.connections.prepared",
+                        "delay": "0",
+                        "history": "7d",
+                        "description": "Total number of prepared transactions\nhttps://www.postgresql.org/docs/current/sql-prepare-transaction.html",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.prepared"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.connections[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "1ec042e5853b430d9d7982c53c3fcf14",
+                        "name": "Connections sum: Total",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.connections.total",
+                        "delay": "0",
+                        "history": "7d",
+                        "description": "Total number of connections",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.total"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.connections[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "101149dd68994084a1cdab82c9d064f0",
+                        "name": "Connections sum: Total %",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.connections.total_pct",
+                        "delay": "0",
+                        "history": "7d",
+                        "units": "%",
+                        "description": "Total number of connections in percentage",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.total_pct"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.connections[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ],
+                        "triggers": [
+                            {
+                                "uuid": "1d0903401af64d93ac16761808d672ca",
+                                "expression": "min(/PostgreSQL/pgsql.connections.total_pct,5m) > {$PG.CONN_TOTAL_PCT.MAX.WARN}",
+                                "name": "Connections sum: Total number of connections is too high (over {$PG.CONN_TOTAL_PCT.MAX.WARN} in 5m)",
+                                "priority": "AVERAGE"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "f2c298008b914434b96da85a985e4a54",
+                        "name": "Connections sum: Waiting",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.connections.waiting",
+                        "delay": "0",
+                        "history": "7d",
+                        "description": "Total number of waiting connections\nhttps://www.postgresql.org/docs/current/monitoring-stats.html#WAIT-EVENT-TABLE",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.waiting"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.connections[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "e926ecd967f342bf90e9923825147d64",
+                        "name": "PostgreSQL: Get connections",
+                        "key": "pgsql.connections[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "0",
+                        "trends": "0",
+                        "value_type": "TEXT",
+                        "description": "Collect all metrics from pg_stat_activity\nhttps://www.postgresql.org/docs/current/monitoring-stats.html#PG-STAT-ACTIVITY-VIEW",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Zabbix raw items"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "1cab825fac8a49ba96dfbf7a696be729",
+                        "name": "PostgreSQL: Custom queries",
+                        "key": "pgsql.custom.query[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\",\"{$PG.DATABASE}\",\"\"]",
+                        "history": "1h",
+                        "trends": "0",
+                        "status": "DISABLED",
+                        "value_type": "TEXT",
+                        "description": "Execute custom queries from file *.sql",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "5c6de0fe332043bfb35c999b10893e4c",
+                        "name": "Dbstat: Hit blocks read",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.blks_hit.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of times disk blocks were found already in the buffer cache",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.blks_hit"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "4dc3f2c23dfd4dfebe024a5c2d4409ae",
+                        "name": "Dbstat: Disk blocks read",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.blks_read.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of disk blocks read",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.blks_read"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "619211cc2afa4a159f36abf1a17d5476",
+                        "name": "Dbstat: Blocks read time",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.blk_read_time",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "s",
+                        "description": "Time spent reading data file blocks by backends, in milliseconds",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.blk_read_time"
+                                ]
+                            },
+                            {
+                                "type": "MULTIPLIER",
+                                "parameters": [
+                                    "0.001"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "fba3b51d644c4c16ac71b3eda1be1701",
+                        "name": "Dbstat: Blocks write time",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.blk_write_time",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "s",
+                        "description": "Time spent writing data file blocks by backends, in milliseconds",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.blk_read_time"
+                                ]
+                            },
+                            {
+                                "type": "MULTIPLIER",
+                                "parameters": [
+                                    "0.001"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "1b98b9c95b32424baa68c354496ed2de",
+                        "name": "Dbstat: Checksum failures",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.checksum_failures.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of data page checksum failures detected (or on a shared object), or NULL if data checksums are not enabled. This metric included in PostgreSQL 12",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.checksum_failures"
+                                ]
+                            },
+                            {
+                                "type": "MATCHES_REGEX",
+                                "parameters": [
+                                    "^\\d*$"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ],
+                                "error_handler": "CUSTOM_VALUE",
+                                "error_handler_params": "-1"
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "0106dfc55ace4dacaff00ce2c98de2ea",
+                        "name": "Dbstat: Conflicts",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.conflicts.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of queries canceled due to conflicts with recovery.  (Conflicts occur only on standby servers; see pg_stat_database_conflicts for details.)",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.conflicts"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "e5d3838e5cf84be9ae83cacf22dc99af",
+                        "name": "Dbstat: Deadlocks",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.deadlocks.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of deadlocks detected",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.deadlocks"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "c61f60e6f7d24ffe99db480f6bbd9613",
+                        "name": "Dbstat: Backends connected",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.numbackends",
+                        "delay": "0",
+                        "history": "7d",
+                        "description": "Number of connected backends",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.numbackends"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        }
+                    },
+                    {
+                        "uuid": "96cb6b388b2c480ead1568293dd81e70",
+                        "name": "Dbstat: Number temp bytes",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.temp_bytes.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "b",
+                        "description": "Total amount of data written to temporary files by queries",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.temp_bytes"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "bea47c8a95074ad3997aff64fcfcf49b",
+                        "name": "Dbstat: Number temp bytes",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.temp_files.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of temporary files created by queries",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.temp_files"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "731f4adac9d34eaaaa1f8d5080fdf6ce",
+                        "name": "Dbstat: Rows deleted",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.tup_deleted.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of rows deleted by queries",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.tup_deleted"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "4eb6cc273484453bab1233de085363f5",
+                        "name": "Dbstat: Rows fetched",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.tup_fetched.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of rows fetched by queries",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.tup_fetched"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "ae250ffa30c94df187c2010011e794aa",
+                        "name": "Dbstat: Rows inserted",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.tup_inserted.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of rows inserted by queries",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.tup_inserted"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "3253ed1c96db4a84974e62b85d80bc0f",
+                        "name": "Dbstat: Rows returned",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.tup_returned.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of rows returned by queries",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.tup_returned"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "13feadafa00a4bd293fcf1a98ddf1f39",
+                        "name": "Dbstat: Rows updated",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.tup_updated.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of rows updated by queries",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.tup_updated"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "bc8a3b29a6684b7f8a70a54b962f0e7e",
+                        "name": "Dbstat: Committed transactions",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.xact_commit.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of transactions that have been committed",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.xact_commit"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "8aedfe3e385b447eb75b85f92301665a",
+                        "name": "Dbstat: Roll backed transactions",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.dbstat.sum.xact_rollback.rate",
+                        "delay": "0",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Number of transactions that have been rolled back",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.xact_rollback"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "ddddde3084d54f55838b970f44290523",
+                        "name": "PostgreSQL: Get dbstat sum",
+                        "key": "pgsql.dbstat.sum[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "0",
+                        "trends": "0",
+                        "value_type": "TEXT",
+                        "description": "Collect all metrics from pg_stat_database per database\nhttps://www.postgresql.org/docs/current/monitoring-stats.html#PG-STAT-DATABASE-VIEW",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Zabbix raw items"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "3be06ec14cba44d0892f3271a599c473",
+                        "name": "PostgreSQL: Get dbstat",
+                        "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "0",
+                        "trends": "0",
+                        "value_type": "TEXT",
+                        "description": "Collect all metrics from pg_stat_database per database\nhttps://www.postgresql.org/docs/current/monitoring-stats.html#PG-STAT-DATABASE-VIEW",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Zabbix raw items"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "7112eeb300c14d959c79715462bf9563",
+                        "name": "PostgreSQL: Get locks",
+                        "key": "pgsql.locks[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "0",
+                        "trends": "0",
+                        "value_type": "TEXT",
+                        "description": "Collect all metrics from pg_locks per database\nhttps://www.postgresql.org/docs/current/explicit-locking.html#LOCKING-TABLES",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Zabbix raw items"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "0377fe6f2f8d4539b649c636ab012415",
+                        "name": "PostgreSQL: Age of oldest xid",
+                        "key": "pgsql.oldest.xid[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "description": "Age of oldest xid.",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ],
+                        "triggers": [
+                            {
+                                "uuid": "2a5c11571d9d46f093ed9081f9d51504",
+                                "expression": "last(/PostgreSQL/pgsql.oldest.xid[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]) > 18000000",
+                                "name": "PostgreSQL: Oldest xid is too big",
+                                "priority": "AVERAGE"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "56323e572fa443228987c62039153825",
+                        "name": "PostgreSQL: Ping",
+                        "key": "pgsql.ping[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "7d",
+                        "preprocessing": [
+                            {
+                                "type": "DISCARD_UNCHANGED_HEARTBEAT",
+                                "parameters": [
+                                    "1h"
+                                ]
+                            }
+                        ],
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ],
+                        "triggers": [
+                            {
+                                "uuid": "48a24a78519d47349200f0b41ceec56a",
+                                "expression": "last(/PostgreSQL/pgsql.ping[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"])=0",
+                                "name": "PostgreSQL: Service is down",
+                                "priority": "HIGH"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "a171db459d6144e4ad294579fb8dc56d",
+                        "name": "Replication: Standby count",
+                        "key": "pgsql.replication.count[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "7d",
+                        "description": "Number of standby servers",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "da9ce769f9444a3f9600ce64c4ab2857",
+                        "name": "Replication: Lag in bytes",
+                        "key": "pgsql.replication.lag.b[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "7d",
+                        "units": "B",
+                        "description": "Replication lag with Master in byte.",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "5a9eb8ee4a484911903688e620eb618b",
+                        "name": "Replication: Lag in seconds",
+                        "key": "pgsql.replication.lag.sec[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "7d",
+                        "units": "s",
+                        "description": "Replication lag with Master in seconds.",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "4120befb754d47e9a931f868c28badb9",
+                        "name": "PostgreSQL: Get replication",
+                        "key": "pgsql.replication.process[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "0",
+                        "trends": "0",
+                        "value_type": "TEXT",
+                        "description": "Collect metrics from the pg_stat_replication, which contains information about the WAL sender process, showing statistics about replication to that sender's connected standby server.",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Zabbix raw items"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "4085b836bf614f3d910818074c386845",
+                        "name": "Replication: Recovery role",
+                        "key": "pgsql.replication.recovery_role[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "7d",
+                        "description": "Replication role: 1 \u2014 recovery is still in progress (standby mode), 0 \u2014 master mode.",
+                        "valuemap": {
+                            "name": "PostgreSQL recovery role"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "3c83904cbad74ff7a0d10136a233e6c6",
+                        "name": "Replication: Status",
+                        "key": "pgsql.replication.status[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "7d",
+                        "description": "Replication status: 0 \u2014 streaming is down, 1 \u2014 streaming is up, 2 \u2014 master mode",
+                        "valuemap": {
+                            "name": "PostgreSQL replication status"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "efa946a67e5844ecb905c68a2a6b85bb",
+                        "name": "PostgreSQL: Uptime",
+                        "key": "pgsql.uptime[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "history": "7d",
+                        "value_type": "FLOAT",
+                        "units": "s",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ],
+                        "triggers": [
+                            {
+                                "uuid": "5fbabc5f60b74a369a13a260d25cce3c",
+                                "expression": "last(/PostgreSQL/pgsql.uptime[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]) < 600",
+                                "name": "PostgreSQL: Service has been restarted (uptime={ITEM.LASTVALUE})",
+                                "priority": "AVERAGE"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "6d5aa6213cf248749cbffdea9aff694f",
+                        "name": "WAL: Segments count",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.wal.count",
+                        "delay": "0",
+                        "history": "7d",
+                        "description": "Number of WAL segments",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.write"
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.wal.stat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "c3d96741af454f6b9a3a49b6117c31be",
+                        "name": "PostgreSQL: Get WAL",
+                        "key": "pgsql.wal.stat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "delay": "5m",
+                        "history": "0",
+                        "trends": "0",
+                        "value_type": "TEXT",
+                        "description": "Collect WAL metrics",
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "Zabbix raw items"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "95f67516be544daf9ad8a1cad2e46114",
+                        "name": "WAL: Bytes written",
+                        "type": "DEPENDENT",
+                        "key": "pgsql.wal.write",
+                        "delay": "0",
+                        "history": "7d",
+                        "units": "B",
+                        "description": "WAL write in bytes",
+                        "preprocessing": [
+                            {
+                                "type": "JSONPATH",
+                                "parameters": [
+                                    "$.write"
+                                ]
+                            },
+                            {
+                                "type": "CHANGE_PER_SECOND",
+                                "parameters": [
+                                    ""
+                                ]
+                            }
+                        ],
+                        "master_item": {
+                            "key": "pgsql.wal.stat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                        },
+                        "tags": [
+                            {
+                                "tag": "Application",
+                                "value": "PostgreSQL"
+                            }
+                        ]
+                    }
+                ],
+                "discovery_rules": [
+                    {
+                        "uuid": "b1a4bfe1031a40529a7c38ac6bed3c6d",
+                        "name": "Database discovery",
+                        "key": "pgsql.db.discovery[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "delay": "1h",
+                        "filter": {
+                            "evaltype": "AND",
+                            "conditions": [
+                                {
+                                    "macro": "{#DBNAME}",
+                                    "value": "{$PG.LLD.FILTER.DBNAME}",
+                                    "formulaid": "A"
+                                }
+                            ]
+                        },
+                        "item_prototypes": [
+                            {
+                                "uuid": "1419ff1331734a4088349332e118ca94",
+                                "name": "DB {#DBNAME}: Database age",
+                                "key": "pgsql.db.age[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\",\"{#DBNAME}\"]",
+                                "delay": "10m",
+                                "history": "7d",
+                                "description": "Database age",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "4367ba7fdffd459ea2b18e1877bc74ca",
+                                "name": "DB {#DBNAME}: Get bloating tables",
+                                "key": "pgsql.db.bloating_tables[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\",\"{#DBNAME}\"]",
+                                "history": "7d",
+                                "description": "Number of bloating tables",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "b614a0909eec40bc841bf7446e842544",
+                                "name": "DB {#DBNAME}: Database size",
+                                "key": "pgsql.db.size[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\",\"{#DBNAME}\"]",
+                                "delay": "5m",
+                                "history": "7d",
+                                "units": "B",
+                                "description": "Database size",
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "4b1b1a4374c0429cb1790e774f181512",
+                                "name": "DB {#DBNAME}: Blocks hit per second",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.blks_hit.rate[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "description": "Total number of times disk blocks were found already in the buffer cache, so that a read was not necessary",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].blks_hit"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "841496e662cc43cf8db7728e96fcba76",
+                                "name": "DB {#DBNAME}: Disk blocks read per second",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.blks_read.rate[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "description": "Total number of disk blocks read in this database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].blks_read"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "0313d02ce8274bc9bcaee54d062300c8",
+                                "name": "DB {#DBNAME}: Disk blocks read per second",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.blk_read_time.rate[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "units": "s",
+                                "description": "Time spent reading data file blocks by backends, in milliseconds",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].blk_read_time"
+                                        ]
+                                    },
+                                    {
+                                        "type": "MULTIPLIER",
+                                        "parameters": [
+                                            "0.001"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "e746a7760d554a0e9d41ba01c3be9db5",
+                                "name": "DB {#DBNAME}: Disk blocks read per second",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.blk_write_time.rate[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "units": "s",
+                                "description": "Time spent writing data file blocks by backends, in milliseconds",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].blk_write_time"
+                                        ]
+                                    },
+                                    {
+                                        "type": "MULTIPLIER",
+                                        "parameters": [
+                                            "0.001"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "d44335162082498bbc42e29e938a4de7",
+                                "name": "DB {#DBNAME}: Checksum failures",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.checksum_failures.rate[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "description": "Number of data page checksum failures detected in this database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].checksum_failures"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "4eb67f16bc2948a7927ed58c9d037466",
+                                "name": "DB {#DBNAME}: Detected conflicts per second",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.conflicts.rate[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "description": "Total number of queries canceled due to conflicts with recovery in this database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].conflicts"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "05ac4216e1a941df8880224ffd38b806",
+                                        "expression": "min(/PostgreSQL/pgsql.dbstat.conflicts.rate[\"{#DBNAME}\"],5m) > {$PG.CONFLICTS.MAX.WARN:\"{#DBNAME}\"}",
+                                        "name": "DB {#DBNAME}: Too many recovery conflicts (over {$PG.CONFLICTS.MAX.WARN:\"{#DBNAME}\"} in 5m)",
+                                        "priority": "AVERAGE",
+                                        "description": "The primary and standby servers are in many ways loosely connected. Actions on the primary will have an effect on the standby. As a result, there is potential for negative interactions or conflicts between them.\nhttps://www.postgresql.org/docs/current/hot-standby.html#HOT-STANDBY-CONFLICT"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "d53da0cc702f4fe381e4d13d454ec229",
+                                "name": "DB {#DBNAME}: Detected deadlocks per second",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.deadlocks.rate[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "description": "Total number of detected deadlocks in this database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].deadlocks"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ],
+                                "trigger_prototypes": [
+                                    {
+                                        "uuid": "dd948e3ec19c419e8c9a62ace8d1695f",
+                                        "expression": "min(/PostgreSQL/pgsql.dbstat.deadlocks.rate[\"{#DBNAME}\"],5m) > {$PG.DEADLOCKS.MAX.WARN:\"{#DBNAME}\"}",
+                                        "name": "DB {#DBNAME}: Deadlock occurred (over {$PG.DEADLOCKS.MAX.WARN:\"{#DBNAME}\"} in 5m)",
+                                        "priority": "HIGH"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "2e31986867d24bca930d141cc5d9cc0f",
+                                "name": "DB {#DBNAME}: Backends connected",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.numbackends[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "description": "Number of backends currently connected to this database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].numbackends"
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "82a2f4b2dc4f4dfe9a0a42144f603a8a",
+                                "name": "DB {#DBNAME}: Temp_bytes written per second",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.temp_bytes.rate[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "units": "B",
+                                "description": "Total amount of data written to temporary files by queries in this database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].temp_bytes"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "480ffc23ca8d41e3ac86bb162007065f",
+                                "name": "DB {#DBNAME}: Temp_files created per second",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.temp_files.rate[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "description": "Total number of temporary files created by queries in this database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].temp_files"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "cf288751fb894e5291b2d539b4c1a6a1",
+                                "name": "DB {#DBNAME}: Tuples deleted per second",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.tup_deleted.rate[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "description": "Total number of rows deleted by queries in this database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].tup_deleted"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "a512a7a075244ccb90ab6824125a405e",
+                                "name": "DB {#DBNAME}: Tuples fetched per second",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.tup_fetched.rate[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "description": "Total number of rows fetched by queries in this database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].tup_fetched"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "2f24c195df5842f1bdf65a11dea3a315",
+                                "name": "DB {#DBNAME}: Tuples inserted per second",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.tup_inserted.rate[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "description": "Total number of rows inserted by queries in this database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].tup_inserted"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "175c5051ef0c4a31b76270cacbdd7ed5",
+                                "name": "DB {#DBNAME}: Tuples returned per second",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.tup_returned.rate[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "description": "Number of rows returned by queries in this database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].tup_returned"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "9888b495d3f04cceb373c341bd4f1941",
+                                "name": "DB {#DBNAME}: Tuples updated per second",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.tup_updated.rate[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "description": "Total number of rows updated by queries in this database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].tup_updated"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "5b0ecb9c928c49a6a01b5df6aec931dd",
+                                "name": "DB {#DBNAME}: Commits per second",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.xact_commit.rate[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "description": "Number of transactions in this database that have been committed",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].xact_commit"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "1d280198e31649fcb053d4c87a0e869d",
+                                "name": "DB {#DBNAME}: Rollbacks per second",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.dbstat.xact_rollback.rate[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "description": "Total number of transactions in this database that have been rolled back",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].xact_rollback"
+                                        ]
+                                    },
+                                    {
+                                        "type": "CHANGE_PER_SECOND",
+                                        "parameters": [
+                                            ""
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.dbstat[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "8eb2bd907a0e4385bcac9e0f467f9748",
+                                "name": "DB {#DBNAME}: Num of accessexclusive locks",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.locks.accessexclusive[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "description": "Number of accessexclusive locks for each database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].accessexclusive"
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.locks[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "5f783de0d6124fc0ae14522a4ad89189",
+                                "name": "DB {#DBNAME}: Num of accessshare locks",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.locks.accessshare[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "description": "Number of accessshare locks for each database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].accessshare"
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.locks[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "3c754430815f411e9aa8dde593f6333a",
+                                "name": "DB {#DBNAME}: Num of exclusive locks",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.locks.exclusive[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "description": "Number of exclusive locks for each database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].exclusive"
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.locks[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "b1ccea7698264d768da1299ec9d13738",
+                                "name": "DB {#DBNAME}: Num of rowexclusive locks",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.locks.rowexclusive[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "description": "Number of rowexclusive locks for each database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].rowexclusive"
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.locks[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "b4b1402b99284f3bbf0ac0dff493449f",
+                                "name": "DB {#DBNAME}: Num of rowshare locks",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.locks.rowshare[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "description": "Number of rowshare locks for each database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].rowshare"
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.locks[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "15eb93e90c1241a99aaff834d69cc5be",
+                                "name": "DB {#DBNAME}: Num of sharerowexclusive locks",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.locks.sharerowexclusive[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "description": "Number of total sharerowexclusive for each database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].sharerowexclusive"
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.locks[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "04e6cec0423f4dddb09e6643561bdf77",
+                                "name": "DB {#DBNAME}: Num of shareupdateexclusive locks",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.locks.shareupdateexclusive[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "description": "Number of shareupdateexclusive locks for each database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].shareupdateexclusive"
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.locks[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "8a410cf1f0be41fbb5a976f368f07430",
+                                "name": "DB {#DBNAME}: Num of share locks",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.locks.share[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "description": "Number of share locks for each database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].share"
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.locks[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "a982064d710644db85ebc1cde67bfe4d",
+                                "name": "DB {#DBNAME}: Num of total locks",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.locks.total[\"{#DBNAME}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "description": "Number of total locks for each database",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#DBNAME}'].total"
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.locks[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: DB {#DBNAME}"
+                                    }
+                                ]
+                            }
+                        ],
+                        "graph_prototypes": [
+                            {
+                                "uuid": "af6eac83efc94d2a9f4a3501207fb5ce",
+                                "name": "DB {#DBNAME}: Locks",
+                                "graph_items": [
+                                    {
+                                        "drawtype": "GRADIENT_LINE",
+                                        "color": "1A7C11",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.locks.total[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "1",
+                                        "color": "2774A4",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.locks.accessexclusive[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "2",
+                                        "color": "F63100",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.locks.accessshare[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "3",
+                                        "color": "A54F10",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.locks.exclusive[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "4",
+                                        "color": "FC6EA3",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.locks.rowexclusive[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "5",
+                                        "color": "6C59DC",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.locks.rowshare[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "6",
+                                        "color": "AC8C14",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.locks.sharerowexclusive[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "7",
+                                        "color": "611F27",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.locks.shareupdateexclusive[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "8",
+                                        "color": "F230E0",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.locks.share[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "9",
+                                        "color": "FFAD40",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.locks.share[\"{#DBNAME}\"]"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "9a518b4bf0f04609863bf9dc4c7f1ea2",
+                                "name": "DB {#DBNAME}: Number of bloating tables",
+                                "graph_items": [
+                                    {
+                                        "drawtype": "GRADIENT_LINE",
+                                        "color": "1A7C11",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.db.bloating_tables[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\",\"{#DBNAME}\"]"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "4d46d39a1d1146c19a57b2b5b8086708",
+                                "name": "DB {#DBNAME}: pg_stat_database metrics",
+                                "graph_items": [
+                                    {
+                                        "color": "1A7C11",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.dbstat.blks_hit.rate[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "1",
+                                        "color": "2774A4",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.dbstat.blks_read.rate[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "2",
+                                        "color": "F63100",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.dbstat.conflicts.rate[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "3",
+                                        "color": "A54F10",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.dbstat.deadlocks.rate[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "4",
+                                        "color": "FC6EA3",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.dbstat.temp_bytes.rate[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "5",
+                                        "color": "6C59DC",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.dbstat.temp_files.rate[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "6",
+                                        "color": "AC8C14",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.dbstat.tup_deleted.rate[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "7",
+                                        "color": "611F27",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.dbstat.tup_fetched.rate[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "8",
+                                        "color": "F230E0",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.dbstat.tup_inserted.rate[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "9",
+                                        "color": "FFAD40",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.dbstat.tup_returned.rate[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "10",
+                                        "color": "40CDFF",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.dbstat.tup_updated.rate[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "11",
+                                        "color": "40FFA0",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.dbstat.xact_commit.rate[\"{#DBNAME}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "12",
+                                        "color": "AE4500",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.dbstat.xact_rollback.rate[\"{#DBNAME}\"]"
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "86853d8590344bad84aab1deb3d1cffc",
+                                "name": "DB {#DBNAME}: Size",
+                                "graph_items": [
+                                    {
+                                        "drawtype": "GRADIENT_LINE",
+                                        "color": "1A7C11",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.db.size[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\",\"{#DBNAME}\"]"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "e94f9017c06644a2bbcb48697381556d",
+                        "name": "Replication Discovery",
+                        "key": "pgsql.replication.process.discovery[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]",
+                        "delay": "15m",
+                        "filter": {
+                            "evaltype": "AND",
+                            "conditions": [
+                                {
+                                    "macro": "{#APPLICATION}",
+                                    "value": "{$PG.LLD.FILTER.APPLICATION}",
+                                    "formulaid": "A"
+                                }
+                            ]
+                        },
+                        "item_prototypes": [
+                            {
+                                "uuid": "15b83330044042668e618501160c37e4",
+                                "name": "Application {#APPLICATION}: Replication flush lag",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.replication.process.flush_lag[\"{#APPLICATION}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "units": "s",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#APPLICATION}'].flush_lag"
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.replication.process[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: Application {#APPLICATION}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "0daf6e3c7843488cb3160a2bd6b09fbf",
+                                "name": "Application {#APPLICATION}: Replication replay lag",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.replication.process.replay_lag[\"{#APPLICATION}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "units": "s",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#APPLICATION}'].replay_lag"
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.replication.process[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: Application {#APPLICATION}"
+                                    }
+                                ]
+                            },
+                            {
+                                "uuid": "2d96bc517d3a4c3fbcae8a7f1436bf72",
+                                "name": "Application {#APPLICATION}: Replication write lag",
+                                "type": "DEPENDENT",
+                                "key": "pgsql.replication.process.write_lag[\"{#APPLICATION}\"]",
+                                "delay": "0",
+                                "history": "7d",
+                                "value_type": "FLOAT",
+                                "units": "s",
+                                "preprocessing": [
+                                    {
+                                        "type": "JSONPATH",
+                                        "parameters": [
+                                            "$['{#APPLICATION}'].write_lag"
+                                        ]
+                                    }
+                                ],
+                                "master_item": {
+                                    "key": "pgsql.replication.process[\"{$PG.URI}\",\"{$PG.USER}\",\"{$PG.PASSWORD}\"]"
+                                },
+                                "tags": [
+                                    {
+                                        "tag": "Application",
+                                        "value": "PostgreSQL: Application {#APPLICATION}"
+                                    }
+                                ]
+                            }
+                        ],
+                        "graph_prototypes": [
+                            {
+                                "uuid": "e79dfe2d436d49da898772a9e7345825",
+                                "name": "Application {#APPLICATION}: Replication lag",
+                                "graph_items": [
+                                    {
+                                        "color": "1A7C11",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.replication.process.flush_lag[\"{#APPLICATION}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "1",
+                                        "color": "2774A4",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.replication.process.replay_lag[\"{#APPLICATION}\"]"
+                                        }
+                                    },
+                                    {
+                                        "sortorder": "2",
+                                        "color": "F63100",
+                                        "item": {
+                                            "host": "PostgreSQL",
+                                            "key": "pgsql.replication.process.write_lag[\"{#APPLICATION}\"]"
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "macros": [
+                    {
+                        "macro": "{$PG.CONFLICTS.MAX.WARN}",
+                        "value": "0"
+                    },
+                    {
+                        "macro": "{$PG.CONN_TOTAL_PCT.MAX.WARN}",
+                        "value": "90"
+                    },
+                    {
+                        "macro": "{$PG.DATABASE}",
+                        "value": "postgres"
+                    },
+                    {
+                        "macro": "{$PG.DEADLOCKS.MAX.WARN}",
+                        "value": "0"
+                    },
+                    {
+                        "macro": "{$PG.LLD.FILTER.APPLICATION}",
+                        "value": "(.+)"
+                    },
+                    {
+                        "macro": "{$PG.LLD.FILTER.DBNAME}",
+                        "value": "(.+)"
+                    },
+                    {
+                        "macro": "{$PG.PASSWORD}",
+                        "value": "zabbix"
+                    },
+                    {
+                        "macro": "{$PG.URI}",
+                        "value": "tcp://localhost:5432"
+                    },
+                    {
+                        "macro": "{$PG.USER}",
+                        "value": "zbx_monitor"
+                    }
+                ],
+                "dashboards": [
+                    {
+                        "uuid": "e3ae726b06cc4663a3eef5a73909f796",
+                        "name": "PostgreSQL databases",
+                        "pages": [
+                            {
+                                "widgets": [
+                                    {
+                                        "type": "GRAPH_PROTOTYPE",
+                                        "width": "12",
+                                        "height": "5",
+                                        "fields": [
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "columns",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "rows",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "source_type",
+                                                "value": "2"
+                                            },
+                                            {
+                                                "type": "GRAPH_PROTOTYPE",
+                                                "name": "graphid",
+                                                "value": {
+                                                    "host": "PostgreSQL",
+                                                    "name": "DB {#DBNAME}: pg_stat_database metrics"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "GRAPH_PROTOTYPE",
+                                        "x": "12",
+                                        "width": "12",
+                                        "height": "5",
+                                        "fields": [
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "columns",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "rows",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "source_type",
+                                                "value": "2"
+                                            },
+                                            {
+                                                "type": "GRAPH_PROTOTYPE",
+                                                "name": "graphid",
+                                                "value": {
+                                                    "host": "PostgreSQL",
+                                                    "name": "DB {#DBNAME}: Locks"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "GRAPH_PROTOTYPE",
+                                        "y": "5",
+                                        "width": "12",
+                                        "height": "5",
+                                        "fields": [
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "columns",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "rows",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "source_type",
+                                                "value": "2"
+                                            },
+                                            {
+                                                "type": "GRAPH_PROTOTYPE",
+                                                "name": "graphid",
+                                                "value": {
+                                                    "host": "PostgreSQL",
+                                                    "name": "DB {#DBNAME}: Size"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "GRAPH_PROTOTYPE",
+                                        "x": "12",
+                                        "y": "5",
+                                        "width": "12",
+                                        "height": "5",
+                                        "fields": [
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "columns",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "rows",
+                                                "value": "1"
+                                            },
+                                            {
+                                                "type": "INTEGER",
+                                                "name": "source_type",
+                                                "value": "2"
+                                            },
+                                            {
+                                                "type": "GRAPH_PROTOTYPE",
+                                                "name": "graphid",
+                                                "value": {
+                                                    "host": "PostgreSQL",
+                                                    "name": "DB {#DBNAME}: Number of bloating tables"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ],
+                "valuemaps": [
+                    {
+                        "uuid": "9f38c01c325248d4b538c0582432b541",
+                        "name": "PostgreSQL recovery role",
+                        "mappings": [
+                            {
+                                "value": "0",
+                                "newvalue": "Master"
+                            },
+                            {
+                                "value": "1",
+                                "newvalue": "Standby"
+                            }
+                        ]
+                    },
+                    {
+                        "uuid": "0fba38eefa4c4073b46d3f8579fda314",
+                        "name": "PostgreSQL replication status",
+                        "mappings": [
+                            {
+                                "value": "0",
+                                "newvalue": "Down"
+                            },
+                            {
+                                "value": "1",
+                                "newvalue": "Up"
+                            },
+                            {
+                                "value": "2",
+                                "newvalue": "Master"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

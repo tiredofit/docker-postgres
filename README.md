@@ -1,7 +1,7 @@
  # github.com/tiredofit/docker-postgres
 
 [![GitHub release](https://img.shields.io/github/v/tag/tiredofit/docker-postgres?style=flat-square)](https://github.com/tiredofit/docker-postgres/releases/latest)
-[![Build Status](https://img.shields.io/github/workflow/status/tiredofit/docker-postgres/build?style=flat-square)](https://github.com/tiredofit/docker-postgres/actions?query=workflow%3Abuild)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/tiredofit/docker-postgres/main.yml?branch=15&style=flat-square)](https://github.com/tiredofit/docker-postgres/actions)
 [![Docker Stars](https://img.shields.io/docker/stars/tiredofit/postgres.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/tiredofit/postgres/)
 [![Docker Pulls](https://img.shields.io/docker/pulls/tiredofit/postgres.svg?style=flat-square&logo=docker)](https://hub.docker.com/r/tiredofit/postgres/)
 [![Become a sponsor](https://img.shields.io/badge/sponsor-tiredofit-181717.svg?logo=github&style=flat-square)](https://github.com/sponsors/tiredofit)
@@ -9,8 +9,16 @@
 
 ## About
 
-This will build a Docker image for [PostgreSQL](https://postgres.org) server. A relational database.
-It has the same configuration variables as the Official [Postgres Image](https://github.com/docker-library/postgres)
+This will build a Docker image for [PostgreSQL](https://postgres.org),A relational database.
+
+Features:
+
+- Customizable Super user account and password
+- Multiple database and user creation
+- Extension Support
+- Replication (Main, Secondary, Snapshot) support
+- Monitoring support via Zabbix Agent 2
+- Customizable paths for logs, config, data
 
 ## Maintainer
 
@@ -24,11 +32,17 @@ It has the same configuration variables as the Official [Postgres Image](https:/
 - [Installation](#installation)
   - [Build from Source](#build-from-source)
   - [Prebuilt Images](#prebuilt-images)
-- [Installation](#installation-1)
-  - [Build from Source](#build-from-source-1)
-  - [Prebuilt Images](#prebuilt-images-1)
+    - [Multi Architecture](#multi-architecture)
+- [Configuration](#configuration)
+  - [Quick Start](#quick-start)
+  - [Persistent Storage](#persistent-storage)
   - [Environment Variables](#environment-variables)
     - [Base Images used](#base-images-used)
+    - [Container Options](#container-options)
+    - [Server Options](#server-options)
+    - [Database Options](#database-options)
+    - [Replication Options](#replication-options)
+    - [Monitoring Options](#monitoring-options)
   - [Networking](#networking)
 - [Maintenance](#maintenance)
   - [Shell Access](#shell-access)
@@ -45,6 +59,7 @@ It has the same configuration variables as the Official [Postgres Image](https:/
 
 ### Build from Source
 Clone this repository and build the image with `docker build <arguments> (imagename) .`
+
 ### Prebuilt Images
 Builds of the image are available on [Docker Hub](https://hub.docker.com/r/tiredofit/postgres) and is the recommended method of installation.
 
@@ -57,58 +72,11 @@ The following image tags are available along with their tagged release based on 
 | Version | Container OS | Tag       |
 | ------- | ------------ | --------- |
 | latest  | Alpine       | `:latest` |
-## Installation
-
-### Build from Source
-Clone this repository and build the image with `docker build <arguments> (imagename) .`
-### Prebuilt Images
-Builds of the image are available on [Docker Hub](https://hub.docker.com/r/tiredofit/postgres) and is the recommended method of installation.
-
-```bash
-docker pull tiredofit/postgres:(imagetag)
-```
-
-The following image tags are available along with their tagged release based on what's written in the [Changelog](CHANGELOG.md):
-
-| Version | Container OS | Tag       |
-| ------- | ------------ | --------- |
-| latest  | Alpine       | `:latest` |
-```
-
-#### Multi Architecture
-Images are built primarily for `amd64` architecture, and may also include builds for `arm/v7`, `arm64` and others. These variants are all unsupported. Consider [sponsoring](https://github.com/sponsors/tiredofit) my work so that I can work with various hardware. To see if this image supports multiple architecures, type `docker manifest (image):(tag)`
-
-## Configuration
-
-### Quick Start
-
-* The quickest way to get started is using [docker-compose](https://docs.docker.com/compose/). See the examples folder for a working [docker-compose.yml](examples/docker-compose.yml) that can be modified for development or production use.
-
-* Set various [environment variables](#environment-variables) to understand the capabilities of this image.
-* Map [persistent storage](#data-volumes) for access to configuration and data files for backup.
-- Make [networking ports](#networking) available for public access if necessary
-
-### Persistent Storage
-
-The following directories are used for configuration and can be mapped for persistent storage.## Installation
-
-### Build from Source
-Clone this repository and build the image with `docker build <arguments> (imagename) .`
-### Prebuilt Images
-Builds of the image are available on [Docker Hub](https://hub.docker.com/r/tiredofit/postgres) and is the recommended method of installation.
-
-```bash
-docker pull tiredofit/postgres:(imagetag)
-```
-
-The following image tags are available along with their tagged release based on what's written in the [Changelog](CHANGELOG.md):
-
-| Version | Container OS | Tag       |
-| ------- | ------------ | --------- |
-| latest  | Alpine       | `:latest` |
+| 15.x    | Alpine       | `:15`     |
+| 14.x    | Alpine       | `:14`     |
 | 13.x    | Alpine       | `:13`     |
 | 12.x    | Alpine       | `:12`     |
-```
+
 
 #### Multi Architecture
 Images are built primarily for `amd64` architecture, and may also include builds for `arm/v7`, `arm64` and others. These variants are all unsupported. Consider [sponsoring](https://github.com/sponsors/tiredofit) my work so that I can work with various hardware. To see if this image supports multiple architecures, type `docker manifest (image):(tag)`
@@ -126,10 +94,14 @@ Images are built primarily for `amd64` architecture, and may also include builds
 ### Persistent Storage
 
 The following directories are used for configuration and can be mapped for persistent storage.
-```
-| Directory                  | Description             |
-| -------------------------- | ----------------------- |
-| `/var/lib/postgresql/data` | Postgres Data Directory |
+
+| Directory                          | Description                                             |
+| ---------------------------------- | ------------------------------------------------------- |
+| `/certs/`                          | (optional) Drop TLS Certificates here                   |
+| `/var/lib/postgresql/data/conf.d/` | Supplemental Configuration directory, loaded at startup |
+| `/var/lib/postgresql/data/`        | Configuration Directory                                 |
+| `/var/lib/postgresql/data/`        | Databases                                               |
+| `/logs/`                           | Logfiles                                                |
 
 ### Environment Variables
 
@@ -143,14 +115,101 @@ Be sure to view the following repositories to understand all the customizable op
 | ------------------------------------------------------ | -------------------------------------- |
 | [OS Base](https://github.com/tiredofit/docker-alpine/) | Customized Image based on Alpine Linux |
 
-| Parameter                 | Description                                                                 | Default                    |
-| ------------------------- | --------------------------------------------------------------------------- | -------------------------- |
-| `PG_DATA`                 | Location for Data Storage                                                   | `/var/lib/postgresql/data` |
-| `POSTGRES_DB`             | Optional - Automatically Create Database (e.g. database)                    |                            |
-| `POSTGRES_USER`           | Optional - Automatically Assign Username Priveleges to Database (e.g. user) |                            |
-| `POSTGRES_PASSWORD`       | Password for authentication to above database (e.g. userpassword)           |                            |
-| `POSTGRES_INITDB_ARGS`    | Send arguments to postgres-initdb (e.g. `--data-checksums`)                 |                            |
-| `POSTGRES_INITDB_XLOGDIR` | Optional Log Location                                                       | `/var/lib/postgresql/data` |
+#### Container Options
+
+| Parameter                    | Description                                                                                                                             | Default                     |
+| ---------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- |
+| `CERT_PATH`                  | Certificates location                                                                                                                   | `/certs/`                   |
+| `CONFIG_CUSTOM_PATH`         | Custom location for configuration                                                                                                       | `${CONFIG_PATH}/conf.d`     |
+| `CONFIG_FILE`                | Configuration file                                                                                                                      | `postgresql.conf`           |
+| `CONFIG_MODE`                | Configuration mode `DEFAULT` - To be used at a later release                                                                            | `DEFAULT`                   |
+| `CONFIG_PATH`                | Configuration storage                                                                                                                   | `${DATA_PATH}`              |
+| `DATA_PATH`                  | Database storage                                                                                                                        | `/var/lib/postgresql/data/` |
+| `HBA_FILE`                   | Host based access file name                                                                                                             | `pg_hba.conf`               |
+| `IDENT_FILE`                 | Identity file name                                                                                                                      | `pg_ident.conf`             |
+| `LOG_FILE`                   | Logfile name                                                                                                                            | `postgresql.log`            |
+| `LOG_FORMAT`                 | Log format `NORMAL` `JSON` or `CSV` Filename extension will change from `.log` to either `.json` or `.csv`                              | `NORMAL`                    |
+| `LOG_LEVEL`                  | Log level messages                                                                                                                      | `WARNING`                   |
+|                              | Values can be in descending detail `DEBUG5`,`DEBUG4`,`DEBUG3`,`DEBUG2`,`DEBUG1`,`INFO`,`NOTICE`,`WARNING`,`ERROR`,`LOG`,`FATAL`,`PANIC` |                             |
+| `LOG_LEVEL_ERROR_STATEMENTS` | Log level for errors                                                                                                                    | `ERROR`                     |
+| `LOG_PATH`                   | Store log files here                                                                                                                    | `/logs/`                    |
+| `LOG_TYPE`                   | Log Type `CONSOLE` or `FILE`                                                                                                            | `FILE`                      |
+| `SETUP_MODE`                 | `AUTO` generate configuration files based on env vars                                                                                   | `AUTO`                      |
+| `WAL_PATH`                   | Write ahead log path if needing to be seperate from `DATA_PATH`                                                                         |                             |
+
+#### Server Options
+
+These options are related to overall server operations. Those bracketed with `(init)` cannot be changed after first run.
+
+| Parameter               | Description                                      | Default    |
+| ----------------------- | ------------------------------------------------ | ---------- |
+| `ENABLE_DATA_CHECKSUMS` | (init) Enable Data Checksumming                  | `FALSE`    |
+| `INITDB_ARGS`           | Send arguments to initdb function                |            |
+| `INITDB_ENCODING`       | (init) DB Encoding                               | `UTF-8`    |
+| `INITDB_LC_COLLATE`     | (init) Locale Collation                          | `C`        |
+| `INITDB_LC_CTYPE`       | (init) Locale CType                              | `C`        |
+| `INITDB_LOCALE`         | (init) Locale                                    | `C`        |
+| `LISTEN_IP`             | Listen Interface                                 | `*`        |
+| `LISTEN_PORT`           | Listening Port                                   | `5432`     |
+| `MAX_CONNECTIONS`       | Maximum concurrent connections to accept         | `100`      |
+| `SERVER_ARGS`           | Send arguments to main Postgresql server process |            |
+| `SUPERUSER_PASS`        | Password for `postgres` super user account       | ``         |
+| `SUPERUSER_USER`        | Name of super user account                       | `postgres` |
+| `WAL_SEGMENT_SIZE_MB`   | (init) Write ahead log segment size in MB        | `16`       |
+
+
+#### Database Options
+
+Automatically create user databases on startup. This can be done on each container start, and then removed on subsequent starts if desired.
+
+| Parameter      | Description                                   | Default |
+| -------------- | --------------------------------------------- | ------- |
+| `CREATE_DB`    | Automatically create databases on startup     | `TRUE`  |
+| `DB_NAME`      | Database Name e.g. `database`                 |         |
+| `DB_USER`      | Database User e.g. `user`                     |         |
+| `DB_PASS`      | Database Pass e.g. `password`                 |         |
+| `DB_EXTENSION` | (optional) Database Extension e.g. `unaccent` |         |
+
+**OR**
+
+Create multiple databases and different usernames and passwords to access. You can share usernames and passwords for multiple databases by using the same user and password in each entry.
+
+| Parameter        | Description                                        | Default |
+| ---------------- | -------------------------------------------------- | ------- |
+| `DB01_NAME`      | First Database Name e.g. `database1`               |         |
+| `DB01_USER`      | First Database User e.g. `user1`                   |         |
+| `DB01_PASS`      | First Database Pass e.g. `password1`               |         |
+| `DB01_EXTENSION` | (optional) Database Extension e.g. `unaccent`      |         |
+| `DB02_NAME`      | Second Database Name e.g. `database1`              |         |
+| `DB02_USER`      | Second Database User e.g. `user2`                  |         |
+| `DB02_PASS`      | Second Database Pass e.g. `password2`              |         |
+| `DB02_EXTENSION` | (optional) Database Extension e.g. `unaccent`      |         |
+| `DBXX_...`       | As above, should be able to go all the way to `99` |         |
+
+#### Replication Options
+
+Enable replication from a `main` provider to a `secondary` read only node or a one time `snapshot` that can be used for read write later on.
+
+| Parameter              | Description                                                 | Default     |
+| ---------------------- | ----------------------------------------------------------- | ----------- |
+| `ENABLE_REPLICATION`   | Enable Replication Functionality                            | `FALSE`     |
+| `REPLICATION_IP_ALLOW` | (main) Allow connections from this IP                       | `0.0.0.0/0` |
+| `REPLICATION_MODE`     | Replication Mode `main`,`secondary`,`snapshot`              | `main`      |
+| `REPLICATION_USER`     | (main/secondary/snapshot) Replication User                  | `replicate` |
+| `REPLICATION_HOST`     | (secondary/snapshot) Hostname of Replication Main server    |             |
+| `REPLICATION_PASS`     | (main/secondary/snapshot) Password of Replication User      |             |
+| `REPLICATION_PORT`     | (secondary/snapshot) Port number of Replication Main server | `5432`      |
+| `REPLICATION_TLS_MODE` | Replication TLS Mode                                        | `prefer`    |
+
+
+#### Monitoring Options
+
+- Zabbix Monitoring only at this time
+| Parameter                     | Description                      | Default       |
+| ----------------------------- | -------------------------------- | ------------- |
+| `CONTAINER_ENABLE_MONITORING` | Enable Zabbix Agent 2 Monitoring | `TRUE`        |
+| `MONITOR_USER`                | Monitoring User                  | `zbx_monitor` |
+| `MONITOR_PASS`                | Monitoring Password              | `zabbix`      |
 
 ### Networking
 
@@ -175,9 +234,11 @@ Welcomed. Please fork the repository and submit a [pull request](../../pulls) fo
 ## Support
 
 These images were built to serve a specific need in a production environment and gradually have had more functionality added based on requests from the community.
+
 ### Usage
 - The [Discussions board](../../discussions) is a great place for working with the community on tips and tricks of using this image.
-- Consider [sponsoring me](https://github.com/sponsors/tiredofit) personalized support.
+- Consider [sponsoring me](https://github.com/sponsors/tiredofit) for personalized support.
+
 ### Bugfixes
 - Please, submit a [Bug Report](issues/new) if something isn't working as expected. I'll do my best to issue a fix in short order.
 

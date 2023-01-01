@@ -1,16 +1,22 @@
 version: '2.4'
 services:
-  
+
   postgres-db:
-    image: tiredofit/postgres:13
-    container_name: postgres-db  
+    image: tiredofit/postgres:15
+    container_name: postgres-db
     volumes:
+      - ./logs:/logs
       - ./db:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=database
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
+      - TIMEZONE=America/Vancouver
       - CONTAINER_NAME=postgres-db
+
+      - SUPERUSER_PASS=superuser
+
+      - DB_NAME=database
+      - DB_USER=user
+      - DB_PASS=password
+
     networks:
       - services
     restart: always

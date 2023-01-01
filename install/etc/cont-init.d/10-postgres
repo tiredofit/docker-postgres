@@ -5,13 +5,13 @@ prepare_service single
 PROCESS_NAME="postgres"
 output_off
 
-if var_true "${CONTAINER_ENABLE_MONITORING}" && [ "${CONTAINER_MONITORING_BACKEND,,}" = "zabbix" ]; then
-    source /assets/defaults/03-monitoring
-    cat <<EOF > "${ZABBIX_CONFIG_PATH}"/"${ZABBIX_CONFIG_FILE}.d"/tiredofit_postgres.conf
-# Zabbix Postgresql Configuration - Automatically Generated
-# Find Companion Zabbix Server Templates at https://github.com/tiredofit/docker-postgres
-# Autoregister=postgres
-EOF
-fi
-
+bootstrap_filesystem
+initialize_cluster
+configure_server
+control_server start
+create_databases
+configure_replication
+configure_monitoring
+control_server stop
+print_info "PostgreSQL init process complete - ready for start up."
 liftoff

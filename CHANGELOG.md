@@ -1,3 +1,10 @@
+## 3.0.1 2023-01-04 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Build and insert Zabbix Agent 2 Postgresql plugin in this image
+      - Cleanup build directories for smaller image size
+
+
 ## 3.0.0 2022-12-31 <dave at tiredofit dot ca>
 
 This image rewrite contains many breaking changes, yet tries to keep compatibility with older installations specifically with paths. It would be recommended to take a backup of your existing database and restore to a fresh installation to take advantage of the new features.

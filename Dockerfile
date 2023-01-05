@@ -1,6 +1,13 @@
-FROM docker.io/tiredofit/alpine:3.17
+ARG DISTRO="alpine"
+ARG DISTRO_VARIANT="3.17"
 
-ENV POSTGRES_VERSION=15.1 \
+FROM docker.io/tiredofit/${DISTRO}:${DISTRO_VARIANT}
+LABEL maintainer="Dave Conroy (github.com/tiredofit)"
+
+ARG POSTGRES_VERSION
+ARG POSTGRES_ZABBIX_PLUGIN_VERSION
+ENV POSTGRES_VERSION=${POSTGRES_VERSION:-"15.1"} \
+    POSTGRES_ZABBIX_PLUGIN_VERSION=${POSTGRES_ZABBIX_PLUGIN_VERSION:-"1.2.0"} \
     CONTAINER_ENABLE_MESSAGING=FALSE \
     IMAGE_NAME="tiredofit/postgres:15" \
     IMAGE_REPO_URL="https://github.com/tiredofit/docker-postgres/"
@@ -52,6 +59,17 @@ RUN source /assets/functions/00-container && \
                     zstd-libs \
                     && \
    \
+   package install .postgres-zabbix-plugin-build-deps \
+                    go \
+                    make \
+                    && \
+   \
+   mkdir -p /usr/src/postgres-zabbix-plugin && \
+   curl -sSL https://cdn.zabbix.com/zabbix-agent2-plugins/sources/postgresql/zabbix-agent2-plugin-postgresql-${POSTGRES_ZABBIX_PLUGIN_VERSION}.tar.gz | tar xvfz - --strip 1 -C /usr/src/postgres-zabbix-plugin && \
+   cd /usr/src/postgres-zabbix-plugin && \
+   make && \
+   mkdir -p /var/lib/zabbix/plugins && \
+   cp zabbix-agent2-plugin-postgresql /var/lib/zabbix/plugins && \
    mkdir -p /usr/src/postgres && \
    curl -sSL https://ftp.postgresql.org/pub/source/v$POSTGRES_VERSION/postgresql-$POSTGRES_VERSION.tar.bz2 | tar xvfj - --strip 1 -C /usr/src/postgres && \
    cd /usr/src/postgres && \
@@ -100,13 +118,18 @@ RUN source /assets/functions/00-container && \
                     $runDeps \
 	                && \
 	\
-    package remove .postgres-build-deps && \
+    package remove \
+                    .postgres-build-deps \
+                    .postgres-zabbix-plugin-build-deps \
+                    && \
     package cleanup && \
     find /usr/local -name '*.a' -delete && \
     rm -rf \
-	        /usr/src/postgresql \
+            /root/.cache \
+            /root/go \
 	        /usr/local/share/doc \
-	        /usr/local/share/man
+	        /usr/local/share/man \
+            /usr/src/*
 
 EXPOSE 5432
 COPY install /

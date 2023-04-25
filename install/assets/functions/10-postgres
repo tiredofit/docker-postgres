@@ -52,6 +52,9 @@ bootstrap_filesystem() {
 control_server() {
     case "${1}" in
         start )
+            transform_var \
+                            SUPERUSER_USER \
+                            SUPERUSER_PASS
             sanity_var "SUPERUSER_PASS" "Superuser Password"
             export PGUSER=$SUPERUSER_USER
             export PGPASSWORD=${SUPERUSER_PASS}
@@ -78,6 +81,10 @@ control_server() {
 configure_monitoring() {
     if var_true "${CONTAINER_ENABLE_MONITORING}" && [ "${CONTAINER_MONITORING_BACKEND,,}" = "zabbix" ]; then
         source /assets/defaults/03-monitoring
+        transform_var \
+                        MONITOR_USER \
+                        MONITOR_PASS
+
         cat <<EOF > "${ZABBIX_CONFIG_PATH}"/"${ZABBIX_CONFIG_FILE}.d"/tiredofit_postgres.conf
 # Zabbix Postgresql Configuration - Automatically Generated
 # Find Companion Zabbix Server Templates at https://github.com/tiredofit/docker-postgres
@@ -114,11 +121,17 @@ EOSQL
 
 configure_replication() {
     if var_true "${ENABLE_REPLICATION}" ; then
+        transform_var \
+                        REAPLICATION_HOST \
+                        REPLICATION_PASS \
+                        REPLICATION_PORT \
+                        REPLICATION_USER
+
         case "${REPLICATION_MODE,,}" in
             main | master | primary )
                 sanity_var "REPLICATION_PASS" "Replication Password"
                 if ! psql -Atq -U ${SUPERUSER_USER} -d postgres -c "SELECT '@' || usename || '@' FROM pg_user" | grep -q "@${REPLICATION_USER}@" ; then
-                    print_notice "[configure_monitoring] Creating Monitor User: '${MONITOR_USER}'"
+                    print_notice "[configure_monitoring] Creating Replication User: '${REPLICATION_USER}'"
                     silent psql \
                             -v \
                             --username ${SUPERUSER_USER} --dbname postgres <<-EOSQL
@@ -151,6 +164,11 @@ EOSQL
 
 create_databases() {
     if var_true "${CREATE_DB}" ; then
+        transform_var \
+                        DB_NAME \
+                        DB_PASS \
+                        DB_USER
+
         if [ -n "${DB_NAME}" ] && [ -z "${DB01_NAME}" ] ; then export DB01_NAME="${DB_NAME}" ; unset DB_NAME ; fi
         if [ -n "${DB_USER}" ] && [ -z "${DB01_USER}" ] ; then export DB01_USER="${DB_USER}" ; unset DB_USER ; fi
         if [ -n "${DB_PASS}" ] && [ -z "${DB01_PASS}" ] ; then export DB01_PASS="${DB_PASS}" ; unset DB_PASS ; fi
@@ -159,11 +177,12 @@ create_databases() {
         dbnum=$(printenv | sort | grep -c '^DB.*_NAME')
         for (( i = 01; i <= dbnum; i++ )) ; do
             i=$(printf "%02d" $i)
-            file_env "DB${i}_NAME"
+            transform_var \
+                            DB${i}_NAME \
+                            DB${i}_USER \
+                            DB${i}_PASS
             DB_NAME=DB${i}_NAME
-            file_env "DB${i}_USER"
             DB_USER=DB${i}_USER
-            file_env "DB${i}_PASS"
             DB_PASS=DB${i}_PASS
             DB_EXTENSION=DB${i}_EXTENSION
 
@@ -284,6 +303,11 @@ EOREPLICATIONHOTSTANDBY
 
             case "${REPLICATION_MODE,,}" in
                 secondary | slave )
+                    transform_var \
+                            REAPLICATION_HOST \
+                            REPLICATION_PASS \
+                            REPLICATION_PORT \
+                            REPLICATION_USER
                     sanity_var "REPLICATION_HOST" "hostname of replication host"
                     sanity_var "REPLICATION_PORT" "listening port of replication host"
                     sanity_var "REPLICATION_USER" "replication user on replication host"
@@ -326,6 +350,11 @@ initialize_cluster() {
             exit 1
         fi
         if var_true "${ENABLE_REPLICATION}" && ! [[ "${REPLICATION_MODE,,}" =~ ^(main|master|primary)$ ]] ; then
+            transform_var \
+                            REAPLICATION_HOST \
+                            REPLICATION_PASS \
+                            REPLICATION_PORT \
+                            REPLICATION_USER
             sanity_var "REPLICATION_HOST" "hostname of replication host"
             sanity_var "REPLICATION_PORT" "listening port of replication host"
             sanity_var "REPLICATION_USER" "replication user on replication host"

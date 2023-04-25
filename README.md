@@ -41,7 +41,6 @@ Features:
     - [Container Options](#container-options)
     - [Server Options](#server-options)
     - [Database Options](#database-options)
-    - [Replication Options](#replication-options)
     - [Monitoring Options](#monitoring-options)
   - [Networking](#networking)
 - [Maintenance](#maintenance)
@@ -141,75 +140,74 @@ Be sure to view the following repositories to understand all the customizable op
 
 These options are related to overall server operations. Those bracketed with `(init)` cannot be changed after first run.
 
-| Parameter               | Description                                      | Default    |
-| ----------------------- | ------------------------------------------------ | ---------- |
-| `ENABLE_DATA_CHECKSUMS` | (init) Enable Data Checksumming                  | `FALSE`    |
-| `INITDB_ARGS`           | Send arguments to initdb function                |            |
-| `INITDB_ENCODING`       | (init) DB Encoding                               | `UTF-8`    |
-| `INITDB_LC_COLLATE`     | (init) Locale Collation                          | `C`        |
-| `INITDB_LC_CTYPE`       | (init) Locale CType                              | `C`        |
-| `INITDB_LOCALE`         | (init) Locale                                    | `C`        |
-| `LISTEN_IP`             | Listen Interface                                 | `*`        |
-| `LISTEN_PORT`           | Listening Port                                   | `5432`     |
-| `MAX_CONNECTIONS`       | Maximum concurrent connections to accept         | `100`      |
-| `SERVER_ARGS`           | Send arguments to main Postgresql server process |            |
-| `SUPERUSER_PASS`        | Password for `postgres` super user account       | ``         |
-| `SUPERUSER_USER`        | Name of super user account                       | `postgres` |
-| `WAL_SEGMENT_SIZE_MB`   | (init) Write ahead log segment size in MB        | `16`       |
+| Parameter               | Description                                      | Default    | `_FILE` |
+| ----------------------- | ------------------------------------------------ | ---------- | ------- |
+| `ENABLE_DATA_CHECKSUMS` | (init) Enable Data Checksumming                  | `FALSE`    |         |
+| `INITDB_ARGS`           | Send arguments to initdb function                |            |         |
+| `INITDB_ENCODING`       | (init) DB Encoding                               | `UTF-8`    |         |
+| `INITDB_LC_COLLATE`     | (init) Locale Collation                          | `C`        |         |
+| `INITDB_LC_CTYPE`       | (init) Locale CType                              | `C`        |         |
+| `INITDB_LOCALE`         | (init) Locale                                    | `C`        |         |
+| `LISTEN_IP`             | Listen Interface                                 | `*`        |         |
+| `LISTEN_PORT`           | Listening Port                                   | `5432`     |         |
+| `MAX_CONNECTIONS`       | Maximum concurrent connections to accept         | `100`      |         |
+| `SERVER_ARGS`           | Send arguments to main Postgresql server process |            |         |
+| `SUPERUSER_PASS`        | Password for `postgres` super user account       | ``         | x       |
+| `SUPERUSER_USER`        | Name of super user account                       | `postgres` | x       |
+| `WAL_SEGMENT_SIZE_MB`   | (init) Write ahead log segment size in MB        | `16`       |         |
 
 
 #### Database Options
 
 Automatically create user databases on startup. This can be done on each container start, and then removed on subsequent starts if desired.
 
-| Parameter      | Description                                   | Default |
-| -------------- | --------------------------------------------- | ------- |
-| `CREATE_DB`    | Automatically create databases on startup     | `TRUE`  |
-| `DB_NAME`      | Database Name e.g. `database`                 |         |
-| `DB_USER`      | Database User e.g. `user`                     |         |
-| `DB_PASS`      | Database Pass e.g. `password`                 |         |
-| `DB_EXTENSION` | (optional) Database Extension e.g. `unaccent` |         |
+| Parameter      | Description                                   | Default | `_FILE` |
+| -------------- | --------------------------------------------- | ------- | ------- |
+| `CREATE_DB`    | Automatically create databases on startup     | `TRUE`  | x       |
+| `DB_NAME`      | Database Name e.g. `database`                 |         | x       |
+| `DB_USER`      | Database User e.g. `user`                     |         | x       |
+| `DB_PASS`      | Database Pass e.g. `password`                 |         | x       |
+| `DB_EXTENSION` | (optional) Database Extension e.g. `unaccent` |         | x       |
 
 **OR**
 
 Create multiple databases and different usernames and passwords to access. You can share usernames and passwords for multiple databases by using the same user and password in each entry.
 
-| Parameter        | Description                                        | Default |
-| ---------------- | -------------------------------------------------- | ------- |
-| `DB01_NAME`      | First Database Name e.g. `database1`               |         |
-| `DB01_USER`      | First Database User e.g. `user1`                   |         |
-| `DB01_PASS`      | First Database Pass e.g. `password1`               |         |
-| `DB01_EXTENSION` | (optional) Database Extension e.g. `unaccent`      |         |
-| `DB02_NAME`      | Second Database Name e.g. `database1`              |         |
-| `DB02_USER`      | Second Database User e.g. `user2`                  |         |
-| `DB02_PASS`      | Second Database Pass e.g. `password2`              |         |
-| `DB02_EXTENSION` | (optional) Database Extension e.g. `unaccent`      |         |
-| `DBXX_...`       | As above, should be able to go all the way to `99` |         |
-
-#### Replication Options
-
+| Parameter                | Description                                        | Default | `_FILE` |
+| ------------------------ | -------------------------------------------------- | ------- | ------- |
+| `DB01_NAME`              | First Database Name e.g. `database1`               |         | x       |
+| `DB01_USER`              | First Database User e.g. `user1`                   |         | x       |
+| `DB01_PASS`              | First Database Pass e.g. `password1`               |         | x       |
+| `DB01_EXTENSION`         | (optional) Database Extension e.g. `unaccent`      |         | x       |
+| `DB02_NAME`              | Second Database Name e.g. `database1`              |         | x       |
+| `DB02_USER`              | Second Database User e.g. `user2`                  |         | x       |
+| `DB02_PASS`              | Second Database Pass e.g. `password2`              |         | x       |
+| `DB02_EXTENSION`         | (optional) Database Extension e.g. `unaccent`      |         |         |
+| `DBXX_...`               | As above, should be able to go all the way to `99` |         |         |
+|                          |
+| #### Replication Options |
+|                          |
 Enable replication from a `main` provider to a `secondary` read only node or a one time `snapshot` that can be used for read write later on.
 
-| Parameter              | Description                                                 | Default     |
-| ---------------------- | ----------------------------------------------------------- | ----------- |
-| `ENABLE_REPLICATION`   | Enable Replication Functionality                            | `FALSE`     |
-| `REPLICATION_IP_ALLOW` | (main) Allow connections from this IP                       | `0.0.0.0/0` |
-| `REPLICATION_MODE`     | Replication Mode `main`,`secondary`,`snapshot`              | `main`      |
-| `REPLICATION_USER`     | (main/secondary/snapshot) Replication User                  | `replicate` |
-| `REPLICATION_HOST`     | (secondary/snapshot) Hostname of Replication Main server    |             |
-| `REPLICATION_PASS`     | (main/secondary/snapshot) Password of Replication User      |             |
-| `REPLICATION_PORT`     | (secondary/snapshot) Port number of Replication Main server | `5432`      |
-| `REPLICATION_TLS_MODE` | Replication TLS Mode                                        | `prefer`    |
-
+| Parameter              | Description                                                 | Default     | `_FILE` |
+| ---------------------- | ----------------------------------------------------------- | ----------- | ------- |
+| `ENABLE_REPLICATION`   | Enable Replication Functionality                            | `FALSE`     |         |
+| `REPLICATION_IP_ALLOW` | (main) Allow connections from this IP                       | `0.0.0.0/0` |         |
+| `REPLICATION_MODE`     | Replication Mode `main`,`secondary`,`snapshot`              | `main`      |         |
+| `REPLICATION_USER`     | (main/secondary/snapshot) Replication User                  | `replicate` | x       |
+| `REPLICATION_HOST`     | (secondary/snapshot) Hostname of Replication Main server    |             | x       |
+| `REPLICATION_PASS`     | (main/secondary/snapshot) Password of Replication User      |             | x       |
+| `REPLICATION_PORT`     | (secondary/snapshot) Port number of Replication Main server | `5432`      | x       |
+| `REPLICATION_TLS_MODE` | Replication TLS Mode                                        | `prefer`    |         |
 
 #### Monitoring Options
 
 - Zabbix Monitoring only at this time
-| Parameter                     | Description                      | Default       |
-| ----------------------------- | -------------------------------- | ------------- |
-| `CONTAINER_ENABLE_MONITORING` | Enable Zabbix Agent 2 Monitoring | `TRUE`        |
-| `MONITOR_USER`                | Monitoring User                  | `zbx_monitor` |
-| `MONITOR_PASS`                | Monitoring Password              | `zabbix`      |
+| Parameter                     | Description                      | Default       | `FILE` |
+| ----------------------------- | -------------------------------- | ------------- | ------ |
+| `CONTAINER_ENABLE_MONITORING` | Enable Zabbix Agent 2 Monitoring | `TRUE`        |        |
+| `MONITOR_USER`                | Monitoring User                  | `zbx_monitor` | x      |
+| `MONITOR_PASS`                | Monitoring Password              | `zabbix`      | x      |
 
 ### Networking
 

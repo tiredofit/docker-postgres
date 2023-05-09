@@ -1,3 +1,9 @@
+## 15-3.1.1 2023-05-09 <dave at tiredofit dot ca>
+
+   ### Added
+      - Update Zabbix Postgresql Plugin to 6.4.2
+
+
 ## 15-3.1.0 2023-04-26 <dave at tiredofit dot ca>
 
    ### Added

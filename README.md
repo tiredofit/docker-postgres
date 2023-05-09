@@ -184,9 +184,9 @@ Create multiple databases and different usernames and passwords to access. You c
 | `DB02_PASS`              | Second Database Pass e.g. `password2`              |         | x       |
 | `DB02_EXTENSION`         | (optional) Database Extension e.g. `unaccent`      |         |         |
 | `DBXX_...`               | As above, should be able to go all the way to `99` |         |         |
-|                          |
-| #### Replication Options |
-|                          |
+
+#### Replication Options
+
 Enable replication from a `main` provider to a `secondary` read only node or a one time `snapshot` that can be used for read write later on.
 
 | Parameter              | Description                                                 | Default     | `_FILE` |
@@ -203,6 +203,7 @@ Enable replication from a `main` provider to a `secondary` read only node or a o
 #### Monitoring Options
 
 - Zabbix Monitoring only at this time
+
 | Parameter                     | Description                      | Default       | `FILE` |
 | ----------------------------- | -------------------------------- | ------------- | ------ |
 | `CONTAINER_ENABLE_MONITORING` | Enable Zabbix Agent 2 Monitoring | `TRUE`        |        |

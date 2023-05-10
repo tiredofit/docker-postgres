@@ -1,3 +1,10 @@
+## 15-3.2.0 2023-05-10 <dave at tiredofit dot ca>
+
+   ### Added
+      - PostgreSQL 15.3
+      - Alpine 3.18 base
+
+
 ## 15-3.1.1 2023-05-09 <dave at tiredofit dot ca>
 
    ### Added

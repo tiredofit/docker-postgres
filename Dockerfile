@@ -7,7 +7,7 @@ LABEL maintainer="Dave Conroy (github.com/tiredofit)"
 ARG POSTGRES_VERSION
 ARG POSTGRES_ZABBIX_PLUGIN_VERSION
 ENV POSTGRES_VERSION=${POSTGRES_VERSION:-"15.3"} \
-    POSTGRES_ZABBIX_PLUGIN_VERSION=${POSTGRES_ZABBIX_PLUGIN_VERSION:-"6.4.2"} \
+    POSTGRES_ZABBIX_PLUGIN_VERSION=${POSTGRES_ZABBIX_PLUGIN_VERSION:-"6.4.3"} \
     CONTAINER_ENABLE_MESSAGING=FALSE \
     IMAGE_NAME="tiredofit/postgres:15" \
     IMAGE_REPO_URL="https://github.com/tiredofit/docker-postgres/"
@@ -36,7 +36,7 @@ RUN source /assets/functions/00-container && \
                     libxml2-dev \
                     libxslt-dev \
                     linux-headers \
-                    llvm-dev \
+#                    llvm-dev \
                     lz4-dev \
                     make \
                     openldap-dev \
@@ -94,7 +94,7 @@ RUN source /assets/functions/00-container && \
 		--with-ldap \
 		--with-libxml \
 		--with-libxslt \
-		--with-llvm \
+		#--with-llvm \
 		--with-lz4 \
 		--with-openssl \
         --with-perl \

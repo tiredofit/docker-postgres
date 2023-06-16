@@ -1,3 +1,9 @@
+## 15-3.2.1 2023-06-16 <dave at tiredofit dot ca>
+
+   ### Reverted
+      - Stop including llvm dependencies
+
+
 ## 15-3.2.0 2023-05-10 <dave at tiredofit dot ca>
 
    ### Added

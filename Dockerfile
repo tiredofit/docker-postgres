@@ -13,7 +13,7 @@ ENV POSTGRES_VERSION=${POSTGRES_VERSION:-"15.3"} \
     IMAGE_REPO_URL="https://github.com/tiredofit/docker-postgres/"
 
 RUN source /assets/functions/00-container && \
-    set -x && \
+    set -ex && \
     addgroup -g 70 postgres && \
     adduser -S -D -H -h /var/lib/postgresql -s /bin/sh -G postgres -u 70 postgres && \
     mkdir -p /var/lib/postgresql && \
@@ -24,7 +24,7 @@ RUN source /assets/functions/00-container && \
     package install .postgres-build-deps \
                     bison \
                     coreutils \
-                    clang \
+#                    clang \
                     dpkg-dev \
                     dpkg \
                     flex \
@@ -65,10 +65,9 @@ RUN source /assets/functions/00-container && \
                     && \
    \
    mkdir -p /usr/src/postgres-zabbix-plugin && \
-   curl -sSL https://cdn.zabbix.com/zabbix-agent2-plugins/sources/postgresql/zabbix-agent2-plugin-postgresql-${POSTGRES_ZABBIX_PLUGIN_VERSION}.tar.gz | tar xvfz - --strip 1 -C /usr/src/postgres-zabbix-plugin && \
+   curl -sSL https://cdn.zabbix.com/zabbix-agent2-plugins/sources/postgresql/zabbix-agent2-plugin-postgresql-${POSTGRES_ZABBIX_PLUGIN_VERSION}.tar.gz | tar xvfz - --strip 2 -C /usr/src/postgres-zabbix-plugin && \
    cd /usr/src/postgres-zabbix-plugin && \
-   make && \
-   mkdir -p /var/lib/zabbix/plugins && \
+   make mkdir -p /var/lib/zabbix/plugins && \
    cp zabbix-agent2-plugin-postgresql /var/lib/zabbix/plugins && \
    mkdir -p /usr/src/postgres && \
    curl -sSL https://ftp.postgresql.org/pub/source/v$POSTGRES_VERSION/postgresql-$POSTGRES_VERSION.tar.bz2 | tar xvfj - --strip 1 -C /usr/src/postgres && \
@@ -80,7 +79,7 @@ RUN source /assets/functions/00-container && \
    wget -O config/config.sub 'https://git.savannah.gnu.org/cgit/config.git/plain/config.sub?id=7d3d27baf8107b630586c962c057e22149653deb' && \
    ./configure \
         --build="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
-		--prefix=/usr/local \
+	    --prefix=/usr/local \
         --with-includes=/usr/local/include \
         --with-libraries=/usr/local/lib \
         --with-system-tzdata=/usr/share/zoneinfo \
@@ -114,7 +113,7 @@ RUN source /assets/functions/00-container && \
 			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
 			| grep -v -e perl -e python -e tcl \
             )"; \
-	package install .postgres-additional-deps \
+	apk add -t .postgres-additional-deps \
                     $runDeps \
 	                && \
 	\

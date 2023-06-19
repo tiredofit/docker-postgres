@@ -1,3 +1,10 @@
+## 15-3.2.2 2023-06-19 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Fix Zabbix Agent2 compilation resulting in breaking rest of build
+      - Strip debug symbols from Zabbix Agent 2
+
+
 ## 15-3.2.1 2023-06-16 <dave at tiredofit dot ca>
 
    ### Reverted

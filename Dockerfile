@@ -24,7 +24,6 @@ RUN source /assets/functions/00-container && \
     package install .postgres-build-deps \
                     bison \
                     coreutils \
-#                    clang \
                     dpkg-dev \
                     dpkg \
                     flex \
@@ -36,7 +35,6 @@ RUN source /assets/functions/00-container && \
                     libxml2-dev \
                     libxslt-dev \
                     linux-headers \
-#                    llvm-dev \
                     lz4-dev \
                     make \
                     openldap-dev \
@@ -67,7 +65,9 @@ RUN source /assets/functions/00-container && \
    mkdir -p /usr/src/postgres-zabbix-plugin && \
    curl -sSL https://cdn.zabbix.com/zabbix-agent2-plugins/sources/postgresql/zabbix-agent2-plugin-postgresql-${POSTGRES_ZABBIX_PLUGIN_VERSION}.tar.gz | tar xvfz - --strip 2 -C /usr/src/postgres-zabbix-plugin && \
    cd /usr/src/postgres-zabbix-plugin && \
-   make mkdir -p /var/lib/zabbix/plugins && \
+   make && \
+   strip zabbix-agent2-plugin-postgresql && \
+   mkdir -p /var/lib/zabbix/plugins && \
    cp zabbix-agent2-plugin-postgresql /var/lib/zabbix/plugins && \
    mkdir -p /usr/src/postgres && \
    curl -sSL https://ftp.postgresql.org/pub/source/v$POSTGRES_VERSION/postgresql-$POSTGRES_VERSION.tar.bz2 | tar xvfj - --strip 1 -C /usr/src/postgres && \
@@ -93,7 +93,6 @@ RUN source /assets/functions/00-container && \
 		--with-ldap \
 		--with-libxml \
 		--with-libxslt \
-		#--with-llvm \
 		--with-lz4 \
 		--with-openssl \
         --with-perl \
@@ -113,7 +112,7 @@ RUN source /assets/functions/00-container && \
 			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
 			| grep -v -e perl -e python -e tcl \
             )"; \
-	apk add -t .postgres-additional-deps \
+	package install .postgres-additional-deps \
                     $runDeps \
 	                && \
 	\

@@ -7,7 +7,7 @@ LABEL maintainer="Dave Conroy (github.com/tiredofit)"
 ARG POSTGRES_VERSION
 ARG POSTGRES_ZABBIX_PLUGIN_VERSION
 ENV POSTGRES_VERSION=${POSTGRES_VERSION:-"15.3"} \
-    POSTGRES_ZABBIX_PLUGIN_VERSION=${POSTGRES_ZABBIX_PLUGIN_VERSION:-"6.4.3"} \
+    POSTGRES_ZABBIX_PLUGIN_VERSION=${POSTGRES_ZABBIX_PLUGIN_VERSION:-"6.4.4"} \
     CONTAINER_ENABLE_MESSAGING=FALSE \
     IMAGE_NAME="tiredofit/postgres:15" \
     IMAGE_REPO_URL="https://github.com/tiredofit/docker-postgres/"
@@ -23,6 +23,7 @@ RUN source /assets/functions/00-container && \
     package upgrade && \
     package install .postgres-build-deps \
                     bison \
+                    clang15 \
                     coreutils \
                     dpkg-dev \
                     dpkg \
@@ -35,6 +36,7 @@ RUN source /assets/functions/00-container && \
                     libxml2-dev \
                     libxslt-dev \
                     linux-headers \
+                    llvm15-dev \
                     lz4-dev \
                     make \
                     openldap-dev \
@@ -52,6 +54,7 @@ RUN source /assets/functions/00-container && \
    package install .postgres-run-deps \
                     icu-data-full \
                     libpq-dev \
+                    llvm15 \
                     musl-locales \
                     openssl \
                     zstd-libs \
@@ -77,29 +80,32 @@ RUN source /assets/functions/00-container && \
    mv src/include/pg_config_manual.h.new src/include/pg_config_manual.h && \
    wget -O config/config.guess 'https://git.savannah.gnu.org/cgit/config.git/plain/config.guess?id=7d3d27baf8107b630586c962c057e22149653deb' && \
    wget -O config/config.sub 'https://git.savannah.gnu.org/cgit/config.git/plain/config.sub?id=7d3d27baf8107b630586c962c057e22149653deb' && \
+   export LLVM_CONFIG="/usr/lib/llvm15/bin/llvm-config" && \
+   export CLANG=clang-15  && \
    ./configure \
         --build="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
-	    --prefix=/usr/local \
+        --prefix=/usr/local \
         --with-includes=/usr/local/include \
         --with-libraries=/usr/local/lib \
         --with-system-tzdata=/usr/share/zoneinfo \
         --with-pgport=5432 \
         --disable-rpath \
         --enable-integer-datetimes \
-		--enable-thread-safety \
-		--enable-tap-tests \
-		--with-gnu-ld \
-		--with-icu \
-		--with-ldap \
-		--with-libxml \
-		--with-libxslt \
-		--with-lz4 \
-		--with-openssl \
+	--enable-thread-safety \
+	--enable-tap-tests \
+	--with-gnu-ld \
+        --with-icu \
+	--with-ldap \
+	--with-libxml \
+	--with-libxslt \
+        --with-llvm \
+	--with-lz4 \
+	--with-openssl \
         --with-perl \
-		--with-python \
-		--with-tcl \
-		--with-uuid=e2fs \
-		--with-zstd \
+	--with-python \
+	--with-tcl \
+	--with-uuid=e2fs \
+	--with-zstd \
         && \
     make -j "$(nproc)" world && \
     make install-world && \

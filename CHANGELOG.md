@@ -1,3 +1,10 @@
+## 15-3.2.4 2023-07-15 <dave at tiredofit dot ca>
+
+   ### Added
+      - Zabbix Agent 6.4.4
+      - Reintroduce building with Clang 15
+
+
 ## 15-3.2.2 2023-06-19 <dave at tiredofit dot ca>
 
    ### Changed

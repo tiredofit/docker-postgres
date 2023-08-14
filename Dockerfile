@@ -6,8 +6,8 @@ LABEL maintainer="Dave Conroy (github.com/tiredofit)"
 
 ARG POSTGRES_VERSION
 ARG POSTGRES_ZABBIX_PLUGIN_VERSION
-ENV POSTGRES_VERSION=${POSTGRES_VERSION:-"15.3"} \
-    POSTGRES_ZABBIX_PLUGIN_VERSION=${POSTGRES_ZABBIX_PLUGIN_VERSION:-"6.4.4"} \
+ENV POSTGRES_VERSION=${POSTGRES_VERSION:-"15.4"} \
+    POSTGRES_ZABBIX_PLUGIN_VERSION=${POSTGRES_ZABBIX_PLUGIN_VERSION:-"6.4.5"} \
     CONTAINER_ENABLE_MESSAGING=FALSE \
     IMAGE_NAME="tiredofit/postgres:15" \
     IMAGE_REPO_URL="https://github.com/tiredofit/docker-postgres/"
@@ -50,7 +50,7 @@ RUN source /assets/functions/00-container && \
                     zlib-dev \
                     zstd-dev \
                     && \
-  \
+   \
    package install .postgres-run-deps \
                     icu-data-full \
                     libpq-dev \

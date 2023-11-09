@@ -1,3 +1,9 @@
+## 16-3.2.8 2023-11-09 <dave at tiredofit dot ca>
+
+   ### Added
+      - Postgresql 16.1
+
+
 ## 16-3.2.7 2023-09-14 <dave at tiredofit dot ca>
 
    ### Added

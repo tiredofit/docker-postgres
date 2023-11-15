@@ -1,7 +1,7 @@
 services:
 
   postgres-db:
-    image: tiredofit/postgres:15
+    image: tiredofit/postgres:16
     container_name: postgres-db
     volumes:
       - ./logs:/logs

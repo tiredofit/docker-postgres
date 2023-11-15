@@ -9,7 +9,7 @@ ARG POSTGRES_ZABBIX_PLUGIN_VERSION
 ENV POSTGRES_VERSION=${POSTGRES_VERSION:-"16.1"} \
     POSTGRES_ZABBIX_PLUGIN_VERSION=${POSTGRES_ZABBIX_PLUGIN_VERSION:-"6.4.8"} \
     CONTAINER_ENABLE_MESSAGING=FALSE \
-    IMAGE_NAME="tiredofit/postgres:15" \
+    IMAGE_NAME="tiredofit/postgres" \
     IMAGE_REPO_URL="https://github.com/tiredofit/docker-postgres/"
 
 RUN source /assets/functions/00-container && \
@@ -91,21 +91,21 @@ RUN source /assets/functions/00-container && \
         --with-pgport=5432 \
         --disable-rpath \
         --enable-integer-datetimes \
-	--enable-thread-safety \
-	--enable-tap-tests \
-	--with-gnu-ld \
+        --enable-thread-safety \
+        --enable-tap-tests \
+        --with-gnu-ld \
         --with-icu \
-	--with-ldap \
-	--with-libxml \
-	--with-libxslt \
+        --with-ldap \
+        --with-libxml \
+        --with-libxslt \
         --with-llvm \
-	--with-lz4 \
-	--with-openssl \
+        --with-lz4 \
+        --with-openssl \
         --with-perl \
-	--with-python \
-	--with-tcl \
-	--with-uuid=e2fs \
-	--with-zstd \
+        --with-python \
+        --with-tcl \
+        --with-uuid=e2fs \
+        --with-zstd \
         && \
     make -j "$(nproc)" world && \
     make install-world && \

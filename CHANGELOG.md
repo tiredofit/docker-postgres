@@ -1,3 +1,10 @@
+## 16-3.2.9 2023-11-15 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Fix issue with image name not reporting correct version
+      - Fix INITDB_LOCALE not being registered properly on database startup
+
+
 ## 16-3.2.8 2023-11-09 <dave at tiredofit dot ca>
 
    ### Added

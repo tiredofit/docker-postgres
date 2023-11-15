@@ -375,7 +375,7 @@ initialize_cluster() {
             print_notice "[initialize_cluster] First time installation detected - Initializing PostgreSQL Databases"
             initdb_args="\
                             --encoding=${INITDB_ENCODING} \
-                            --icu=locale=${INITDB_LOCALE} \
+                            --icu-locale=${INITDB_LOCALE} \
                             --locale-provider=icu \
                             --lc-collate=${INITDB_LC_COLLATE} \
                             --lc-ctype=${INITDB_LC_CTYPE} \

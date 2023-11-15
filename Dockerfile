@@ -9,7 +9,7 @@ ARG POSTGRES_ZABBIX_PLUGIN_VERSION
 ENV POSTGRES_VERSION=${POSTGRES_VERSION:-"15.5"} \
     POSTGRES_ZABBIX_PLUGIN_VERSION=${POSTGRES_ZABBIX_PLUGIN_VERSION:-"6.4.8"} \
     CONTAINER_ENABLE_MESSAGING=FALSE \
-    IMAGE_NAME="tiredofit/postgres:15" \
+    IMAGE_NAME="tiredofit/postgres" \
     IMAGE_REPO_URL="https://github.com/tiredofit/docker-postgres/"
 
 RUN source /assets/functions/00-container && \

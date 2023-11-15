@@ -1,3 +1,10 @@
+## 15-3.2.7 2023-11-15 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Fix issue with INITDB_LOCALE not being applied on database initialization
+      - Fix image version reporting duplicate versions
+
+
 ## 15-3.2.6 2023-11-09 <dave at tiredofit dot ca>
 
    ### Added

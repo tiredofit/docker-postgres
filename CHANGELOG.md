@@ -1,3 +1,9 @@
+## 16-3.2.10 2023-11-15 <dave at tiredofit dot ca>
+
+   ### Changed
+      - Change INITDB_LOCALE=en
+
+
 ## 16-3.2.9 2023-11-15 <dave at tiredofit dot ca>
 
    ### Changed

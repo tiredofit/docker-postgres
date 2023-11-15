@@ -41,6 +41,7 @@ Features:
     - [Container Options](#container-options)
     - [Server Options](#server-options)
     - [Database Options](#database-options)
+    - [Replication Options](#replication-options)
     - [Monitoring Options](#monitoring-options)
   - [Networking](#networking)
 - [Maintenance](#maintenance)
@@ -147,7 +148,7 @@ These options are related to overall server operations. Those bracketed with `(i
 | `INITDB_ENCODING`       | (init) DB Encoding                               | `UTF-8`    |         |
 | `INITDB_LC_COLLATE`     | (init) Locale Collation                          | `C`        |         |
 | `INITDB_LC_CTYPE`       | (init) Locale CType                              | `C`        |         |
-| `INITDB_LOCALE`         | (init) Locale                                    | `C`        |         |
+| `INITDB_LOCALE`         | (init) Locale                                    | `en`       |         |
 | `LISTEN_IP`             | Listen Interface                                 | `*`        |         |
 | `LISTEN_PORT`           | Listening Port                                   | `5432`     |         |
 | `MAX_CONNECTIONS`       | Maximum concurrent connections to accept         | `100`      |         |

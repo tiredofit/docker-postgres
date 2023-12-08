@@ -1,3 +1,10 @@
+## 16-3.2.11 2023-12-08 <dave at tiredofit dot ca>
+
+   ### Added
+      - Change base image to tiredofit/alpine:3.19
+      - Zabbix Plugin 6.4.9
+
+
 ## 16-3.2.10 2023-11-15 <dave at tiredofit dot ca>
 
    ### Changed

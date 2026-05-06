@@ -1,5 +1,4 @@
 services:
-
   postgres-db:
     image: docker.io/nfrastack/postgres:17
     container_name: postgres-db
@@ -14,7 +13,6 @@ services:
       - DB_NAME=database
       - DB_USER=user
       - DB_PASS=password
-
     networks:
       - services
     restart: always

@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"name": "container-postgres",
+			"path": "."
+		},
+		{
+			"name": "container-base",
+			"path": "../container-base"
+		},
+		{
+			"name": "gha",
+			"path": "../gha"
+		}
+	],
+	"settings": {}
+}

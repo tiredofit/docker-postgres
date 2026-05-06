@@ -1,3 +1,12 @@
+## 18-3.3.2 2026-05-06 <code at nfrastack dot com>
+
+   ### Added
+      - Bump to Alpine 3.23
+
+   ### Changed
+      - Remove dependency on gnu.org when building
+
+
 ## 18-3.3.1 2026-03-16 <code at nfastack dot com>
 
    ### Added

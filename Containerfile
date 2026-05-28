@@ -95,7 +95,7 @@ RUN echo "" && \
         package install \
                         POSTGRES_ZABBIX_BUILD_DEPS \
                         && \
-        package build go && \
+        package build go buildtime && \
         POSTGRES_ZABBIX_PLUGIN_VERSION=${POSTGRES_ZABBIX_PLUGIN_VERSION:-"$(zabbix_agent2 --version | head -n1 | awk {'print $3'})"} ; \
         mkdir -p /usr/src/postgres-zabbix-plugin ; \
         curl -sSL https://cdn.zabbix.com/zabbix-agent2-plugins/sources/postgresql/zabbix-agent2-plugin-postgresql-${POSTGRES_ZABBIX_PLUGIN_VERSION}.tar.gz | tar xvfz - --strip 2 -C /usr/src/postgres-zabbix-plugin ; \

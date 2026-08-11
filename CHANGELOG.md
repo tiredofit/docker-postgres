@@ -1,3 +1,10 @@
+## 16-3.3.1 2026-08-11 <code at nfrastack dot com>
+
+   ### Added
+      - Postgresql 16.15
+      - Alpine 3.24
+
+
 ## 16-3.3.0 2025-12-19 <code at nfrastack dot com>
 
    ### Added

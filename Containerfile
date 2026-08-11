@@ -18,7 +18,7 @@ LABEL \
         org.opencontainers.image.licenses="MIT"
 
 ARG \
-    POSTGRES_VERSION="REL_16_11" \
+    POSTGRES_VERSION="REL_16_15" \
     POSTGRES_REPO_URL="https://github.com/postgres/postgres" \
     POSTGRES_ZABBIX_PLUGIN_VERSION
 
